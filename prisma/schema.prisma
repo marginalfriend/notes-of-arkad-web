@@ -36,6 +36,8 @@ model Profile {
 
   oneTimeBudget   OneTimeBudget[]
   recurringBudget RecurringBudget[]
+
+  Expense Expense[]
 }
 
 model OneTimeBudget {
@@ -99,4 +101,14 @@ model RecurringBudgetExpense {
   recurringBudgetId String
   recurringBudget   RecurringBudget @relation(fields: [recurringBudgetId], references: [id])
   amount            Float
+}
+
+model Expense {
+  id String @id @default(cuid())
+  name String
+  amount Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id])
 }
