@@ -1,22 +1,27 @@
 import { NextResponse } from "next/server";
-import { compare } from "bcrypt";
+import { hash } from "bcrypt";
 import prisma from "@/prisma";
 import { generateToken } from "@/lib/auth";
 
 export async function POST(request: Request) {
   const { username, password } = await request.json();
 
-  const user = await prisma.account.findUnique({ where: { username } });
-
-  if (!user) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+  const existingUser = await prisma.account.findUnique({ where: { username } });
+  if (existingUser) {
+    return NextResponse.json({ error: "Username already exists" }, { status: 400 });
   }
 
-  const isPasswordValid = await compare(password, user.password);
+  const hashedPassword = await hash(password, 10);
 
-  if (!isPasswordValid) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-  }
+  const user = await prisma.account.create({
+    data: {
+      username,
+      password: hashedPassword,
+      Profile: {
+        create: { name: username }
+      }
+    },
+  });
 
   const token = generateToken({ id: user.id, username: user.username });
 

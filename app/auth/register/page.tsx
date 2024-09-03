@@ -17,38 +17,65 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { register } from "./actions";
+import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { FormProvider } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+type RegisterFormData = {
+  username: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const Register = () => {
   const { toast } = useToast();
-  const form = useForm();
+  const { login } = useAuth();
+  const form = useForm<RegisterFormData>();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
-    register(data).then((result) => {
-      if (result.error) {
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: data.username,
+          password: data.password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
         toast({
           title: "Error",
-          description: result.message,
+          description: result.error,
           variant: "destructive",
         });
       } else {
         toast({
           title: "Success",
-          description: result.message,
+          description: "Registration successful",
         });
+        login(result.token);
+        router.push("/dashboard");
       }
-    });
-    setIsLoading(false);
-
-    router.push("/auth/login");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -147,7 +174,14 @@ const Register = () => {
                 )}
               />
               <Button type="submit" disabled={isLoading} className="w-full">
-                {isLoading ? "Loading..." : "Register"}
+                {isLoading ? (
+                  <>
+                    <span className="mr-2">Loading</span>
+                    <span className="animate-spin">⚪</span>
+                  </>
+                ) : (
+                  "Register"
+                )}
               </Button>
             </form>
           </FormProvider>
