@@ -8,7 +8,10 @@ export async function POST(request: Request) {
 
   const existingUser = await prisma.account.findUnique({ where: { username } });
   if (existingUser) {
-    return NextResponse.json({ error: "Username already exists" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Username already exists" },
+      { status: 400 }
+    );
   }
 
   const hashedPassword = await hash(password, 10);
@@ -18,15 +21,15 @@ export async function POST(request: Request) {
       username,
       password: hashedPassword,
       Profile: {
-        create: { name: username }
-      }
+        create: { name: username },
+      },
     },
   });
 
-  const token = generateToken({ id: user.id, username: user.username });
+  const token = await generateToken({ id: user.id, username: user.username });
 
   const response = NextResponse.json({ token });
-  response.cookies.set('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+  response.cookies.set("token", token);
 
   return response;
 }
