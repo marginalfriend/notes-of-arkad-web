@@ -1,38 +1,26 @@
-import React from "react";
-import { HomeIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+"use client";
 
-const navItems = [
-  {
-    name: 'Home',
-    href: '/dashboard',
-    icon: <HomeIcon />,
-  },
-]
+import { useAuth } from "@/hooks/use-auth";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/auth/login");
+    }
+  }, [isAuthenticated, router]);
+
+  if (!isAuthenticated) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
-      <aside className="left-0 top-0 h-full w-[280px] border-r flex flex-col items-center justify-between">
-        <div className="h-[60px] w-full flex items-center justify-center">
-          <h1 className="text-2xl font-bold">Arkad</h1>
-          <nav>
-            <ul>
-              {navItems.map((item) => (
-                <li key={item.name}>
-                  <Link href={item.href}>
-                    <Button variant="ghost" className="w-full flex justify-start items-center gap-2">
-                      {item.icon}
-                      {item.name}
-                    </Button>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </aside>
+      {/* Your existing layout code */}
       {children}
     </>
   );

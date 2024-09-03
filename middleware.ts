@@ -12,13 +12,19 @@ export default async function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path)
 
   // 3. Get the token from the Authorization header
-  const token = req.headers.get('Authorization')?.split(' ')[1] || req.cookies.get('token')?.value
+  const token = req.cookies.get('token')?.value
+
+  console.log('Middleware - Path:', path);
+  console.log('Middleware - Token:', token);
 
   // 4. Verify the token
-  const user = token ? verifyToken(token) : null
+  const user = token ? await verifyToken(token) : null
+
+  console.log('Middleware - User:', user);
 
   // 5. Redirect to /auth/login if the user is not authenticated
   if (isProtectedRoute && !user) {
+    console.log('Middleware - Redirecting to login');
     return NextResponse.redirect(new URL('/auth/login', req.nextUrl))
   }
 
@@ -28,6 +34,7 @@ export default async function middleware(req: NextRequest) {
     user &&
     !req.nextUrl.pathname.startsWith('/dashboard')
   ) {
+    console.log('Middleware - Redirecting to dashboard');
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
   }
 

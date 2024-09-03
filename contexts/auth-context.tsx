@@ -28,33 +28,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const checkAuth = async () => {
       try {
-        const decodedToken = jwtDecode(token) as {
-          id: string;
-          username: string;
-        };
-        setUser(decodedToken);
-        setIsAuthenticated(true);
+        const response = await fetch('/api/auth/me');
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Auth check successful:', data.user);
+          setUser(data.user);
+          setIsAuthenticated(true);
+        } else {
+          console.log('Auth check failed');
+          setUser(null);
+          setIsAuthenticated(false);
+        }
       } catch (error) {
-        console.error("Invalid token:", error);
-        logout();
+        console.error('Error checking authentication:', error);
+        setUser(null);
+        setIsAuthenticated(false);
       }
-    }
+    };
+
+    checkAuth();
   }, []);
 
+  console.log('Auth state:', { isAuthenticated, user });
+
   const login = (token: string) => {
-    localStorage.setItem("token", token);
     const decodedToken = jwtDecode(token) as { id: string; username: string };
     setUser(decodedToken);
     setIsAuthenticated(true);
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-    setIsAuthenticated(false);
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setUser(null);
+      setIsAuthenticated(false);
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (
