@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { hash } from "bcrypt";
 import prisma from "@/prisma";
-import { generateToken } from "@/lib/auth";
+import { generateTokens } from "@/lib/auth";
 
 export async function POST(request: Request) {
   const { username, password } = await request.json();
@@ -26,10 +26,11 @@ export async function POST(request: Request) {
     },
   });
 
-  const token = await generateToken({ id: user.id, username: user.username });
+  const { accessToken, refreshToken } = await generateTokens({ id: user.id, username: user.username });
 
-  const response = NextResponse.json({ token });
-  response.cookies.set("token", token);
+  const response = NextResponse.json({ accessToken });
+  response.cookies.set("token", accessToken);
+  response.cookies.set("refreshToken", refreshToken);
 
   return response;
 }

@@ -1,47 +1,43 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyToken } from '@/lib/auth'
+import { NextRequest, NextResponse } from "next/server";
+import { verifyAccessToken } from "@/lib/auth";
 
 // 1. Specify protected and public routes
-const protectedRoutes = ['/dashboard']
-const publicRoutes = ['/auth/login', '/auth/register', '/']
+const protectedRoutes = ["/dashboard"];
+const publicRoutes = ["/auth/login", "/auth/register", "/"];
 
 export default async function middleware(req: NextRequest) {
   // 2. Check if the current route is protected or public
-  const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
-  const isPublicRoute = publicRoutes.includes(path)
+  const path = req.nextUrl.pathname;
+  const isProtectedRoute = protectedRoutes.includes(path);
+  const isPublicRoute = publicRoutes.includes(path);
 
   // 3. Get the token from the Authorization header
-  const token = req.cookies.get('token')?.value
+  const token = req.cookies.get("refreshToken")?.value;
 
-  console.log('Middleware - Path:', path);
-  console.log('Middleware - Token:', token);
+  console.log("Middleware - Path:", path);
+  console.log("Middleware - Token:", token);
 
   // 4. Verify the token
-  const user = token ? await verifyToken(token) : null
+  const user = token ? await verifyAccessToken(token) : null;
 
-  console.log('Middleware - User:', user);
+  console.log("Middleware - User:", user);
 
   // 5. Redirect to /auth/login if the user is not authenticated
   if (isProtectedRoute && !user) {
-    console.log('Middleware - Redirecting to login');
-    return NextResponse.redirect(new URL('/auth/login', req.nextUrl))
+    console.log("Middleware - Redirecting to login");
+    return NextResponse.redirect(new URL("/auth/login", req.nextUrl));
   }
 
   // 6. Redirect to /dashboard if the user is authenticated
-  if (
-    isPublicRoute &&
-    user &&
-    !req.nextUrl.pathname.startsWith('/dashboard')
-  ) {
-    console.log('Middleware - Redirecting to dashboard');
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+  if (isPublicRoute && user && !req.nextUrl.pathname.startsWith("/dashboard")) {
+    console.log("Middleware - Redirecting to dashboard");
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 // Routes Middleware should not run on
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-}
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};
