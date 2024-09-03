@@ -7,6 +7,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
+  CardFooter,
 } from "@/components/ui/card";
 import {
   FormField,
@@ -21,13 +22,14 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { FormProvider } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Register = () => {
   const { toast } = useToast();
   const form = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  
+
   const onSubmit = (data: any) => {
     setIsLoading(true);
     register(data).then((result) => {
@@ -119,12 +121,45 @@ const Register = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isLoading}>
+              <FormField
+                name="confirmPassword"
+                control={form.control}
+                rules={{
+                  required: "Confirm Password is required",
+                  validate: (value) =>
+                    value === form.getValues("password") ||
+                    "Passwords do not match",
+                }}
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        {...field}
+                        placeholder="********"
+                      />
+                    </FormControl>
+                    {fieldState.error && (
+                      <p className="text-red-500">{fieldState.error.message}</p>
+                    )}
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" disabled={isLoading} className="w-full">
                 {isLoading ? "Loading..." : "Register"}
               </Button>
             </form>
           </FormProvider>
         </CardContent>
+        <CardFooter>
+          <p className="text-sm text-gray-500">
+            Already have an account?{" "}
+            <Link href="/auth/login">
+              <span className="text-blue-400 hover:underline">Login here</span>
+            </Link>
+          </p>
+        </CardFooter>
       </Card>
     </main>
   );
