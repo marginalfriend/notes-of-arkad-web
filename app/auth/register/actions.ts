@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/prisma";
+import prisma from "@/lib/prisma";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 
@@ -14,7 +14,9 @@ export const register = async (formData: FormData) => {
     const { username, password } = schema.parse(Object.fromEntries(formData));
 
     // Check if username already exists
-    const existingUser = await prisma.account.findUnique({ where: { username } });
+    const existingUser = await prisma.account.findUnique({
+      where: { username },
+    });
     if (existingUser) {
       return { message: "Username already exists", error: "USERNAME_EXISTS" };
     }
@@ -27,8 +29,8 @@ export const register = async (formData: FormData) => {
         username,
         password: hashedPassword,
         Profile: {
-          create: { name: username } // Create a default profile
-        }
+          create: { name: username }, // Create a default profile
+        },
       },
     });
 

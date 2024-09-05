@@ -104,8 +104,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkAuth();
   }, []);
 
-  console.log("Auth state:", { isAuthenticated, user });
-
   return (
     <AuthContext.Provider
       value={{ isAuthenticated, user, login, logout, getAccessToken }}

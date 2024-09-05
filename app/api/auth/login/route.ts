@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { compare } from "bcrypt";
-import prisma from "@/prisma";
+import prisma from "@/lib/prisma";
 import { generateTokens } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -12,15 +12,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
-  const { accessToken, refreshToken } = await generateTokens({ id: user.id, username: user.username });
+  const { accessToken, refreshToken } = await generateTokens({
+    id: user.id,
+    username: user.username,
+  });
 
   const response = NextResponse.json({ accessToken });
-  response.cookies.set('refreshToken', refreshToken, {
+  response.cookies.set("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60, // 7 days
-    path: '/',
+    path: "/",
   });
 
   return response;

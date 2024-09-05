@@ -36,7 +36,6 @@ export default function Dashboard() {
   return (
     <div>
       <h1>Dashboard</h1>
-      <p>Welcome, {user?.username}!</p>
       {dashboardData && (
         <div>
           {/* Render your dashboard data here */}
