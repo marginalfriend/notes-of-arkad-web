@@ -11,7 +11,7 @@ const recurringBudgetSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const token = request.cookies.get("accessToken")?.value;
+  const token = request.headers.get("Authorization");
 
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -36,13 +36,15 @@ export async function POST(request: NextRequest) {
   const { profileId, name } = data;
 
   if (!profileId) {
+    console.log("Profile ID is required");
     return NextResponse.json(
-      { error: "Profile ID is required" },
+      { statusText: "Profile ID is required" },
       { status: 400 }
     );
   }
 
   if (!name) {
+    console.log("Name is required");
     return NextResponse.json({ error: "Name is required" }, { status: 400 });
   }
 
@@ -51,6 +53,7 @@ export async function POST(request: NextRequest) {
   });
 
   if (!profile) {
+    console.log("Profile not found");
     return NextResponse.json({ error: "Profile not found" }, { status: 404 });
   }
 

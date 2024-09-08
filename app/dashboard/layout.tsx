@@ -1,10 +1,18 @@
 "use client";
 
 import React from "react";
-import { ArrowRightStartOnRectangleIcon, HomeIcon, BanknotesIcon, ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightStartOnRectangleIcon,
+  HomeIcon,
+  BanknotesIcon,
+  ClipboardDocumentListIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { useProfile } from "@/contexts/profile-context";
+import { MoonLoader } from "react-spinners";
+import { CreateProfileDialog } from "./_components/create-profile-dialog";
 
 const navItems = [
   {
@@ -26,9 +34,19 @@ const navItems = [
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { logout } = useAuth();
-  
+  const { currentProfile, profiles, loading } = useProfile();
+
+  if (loading) {
+    return (
+      <main className="w-screen h-screen flex items-center justify-center">
+        <MoonLoader color="#1a1a1d" loading speedMultiplier={0.5} />
+      </main>
+    );
+  }
+
   return (
     <div className="w-screen h-screen">
+      {profiles.length === 0 && <CreateProfileDialog isOpen={true} />}
       <aside className="left-0 top-0 h-full fixed w-[280px] border-r flex flex-col items-center justify-between">
         <div className="w-full flex flex-col items-center justify-start pt-8">
           <h1 className="text-2xl text-center font-bold mb-6">Arkad</h1>
@@ -49,13 +67,16 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               ))}
             </ul>
           </nav>
-
         </div>
         <div className="h-[60px] w-full flex flex-col items-center justify-center">
           {/* // Logout Button */}
-          <Button variant="ghost" className="w-full flex justify-start items-center gap-2" onClick={() => {
-            logout();
-          }}>
+          <Button
+            variant="ghost"
+            className="w-full flex justify-start items-center gap-2"
+            onClick={() => {
+              logout();
+            }}
+          >
             <ArrowRightStartOnRectangleIcon className="w-4 h-4" />
             Logout
           </Button>

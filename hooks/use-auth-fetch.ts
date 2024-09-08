@@ -1,4 +1,4 @@
-import { useAuth } from './use-auth';
+import { useAuth } from "./use-auth";
 
 export const useAuthFetch = () => {
   const { getAccessToken } = useAuth();
@@ -7,11 +7,11 @@ export const useAuthFetch = () => {
     const token = await getAccessToken();
 
     if (!token) {
-      throw new Error('No access token available');
+      throw new Error("No access token available");
     }
 
     const headers = new Headers(options.headers);
-    headers.set('Authorization', `Bearer ${token}`);
+    headers.set("Authorization", token);
 
     const response = await fetch(url, {
       ...options,
@@ -22,16 +22,17 @@ export const useAuthFetch = () => {
       // Token might have expired during the request
       const newToken = await getAccessToken();
       if (newToken) {
-        headers.set('Authorization', `Bearer ${newToken}`);
+        headers.set("Authorization", newToken);
         return fetch(url, {
           ...options,
           headers,
         });
       } else {
-        throw new Error('Unable to refresh token');
+        throw new Error("Unable to refresh token");
       }
     }
 
+    console.log(response);
     return response;
   };
 

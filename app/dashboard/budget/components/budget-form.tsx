@@ -35,7 +35,9 @@ const oneTimeBudgetItemSchema = z.object({
 
 const oneTimeBudgetSchema = z.object({
   name: z.string().min(1, "Name is required").max(255, "Name is too long"),
-  oneTimeBudgetItems: z.array(oneTimeBudgetItemSchema).min(1, "At least one budget item is required"),
+  oneTimeBudgetItems: z
+    .array(oneTimeBudgetItemSchema)
+    .min(1, "At least one budget item is required"),
 });
 
 export const BudgetForm = () => {
@@ -65,7 +67,9 @@ export const BudgetForm = () => {
     name: "oneTimeBudgetItems",
   });
 
-  const onSubmitRecurring = async (data: z.infer<typeof recurringBudgetSchema>) => {
+  const onSubmitRecurring = async (
+    data: z.infer<typeof recurringBudgetSchema>
+  ) => {
     setLoading(true);
     try {
       const response = await authFetch("/api/budget/recurring", {
@@ -73,13 +77,20 @@ export const BudgetForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) throw new Error("Failed to create recurring budget");
 
       recurringForm.reset();
-      toast({ title: "Recurring budget created", description: "Your recurring budget has been created successfully" });
+      toast({
+        title: "Recurring budget created",
+        description: "Your recurring budget has been created successfully",
+      });
     } catch (error) {
-      toast({ title: "Error", description: "Failed to create recurring budget. Please try again.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to create recurring budget. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -93,13 +104,23 @@ export const BudgetForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      
-      if (!response.ok) throw new Error("Failed to create one-time budget");
+
+      if (!response.ok) {
+        console.log(response);
+        throw new Error("Failed to create one-time budget");
+      }
 
       oneTimeForm.reset();
-      toast({ title: "One-time budget created", description: "Your one-time budget has been created successfully" });
+      toast({
+        title: "One-time budget created",
+        description: "Your one-time budget has been created successfully",
+      });
     } catch (error) {
-      toast({ title: "Error", description: "Failed to create one-time budget. Please try again.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to create one-time budget. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -113,7 +134,10 @@ export const BudgetForm = () => {
       </TabsList>
       <TabsContent value="recurring">
         <Form {...recurringForm}>
-          <form onSubmit={recurringForm.handleSubmit(onSubmitRecurring)} className="space-y-8">
+          <form
+            onSubmit={recurringForm.handleSubmit(onSubmitRecurring)}
+            className="space-y-8"
+          >
             <FormField
               control={recurringForm.control}
               name="name"
@@ -123,12 +147,14 @@ export const BudgetForm = () => {
                   <FormControl>
                     <Input placeholder="Enter budget name" {...field} />
                   </FormControl>
-                  <FormDescription>Give your recurring budget a descriptive name.</FormDescription>
+                  <FormDescription>
+                    Give your recurring budget a descriptive name.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={recurringForm.control}
               name="amount"
@@ -136,14 +162,20 @@ export const BudgetForm = () => {
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Enter amount" {...field} />
+                    <Input
+                      type="number"
+                      placeholder="Enter amount"
+                      {...field}
+                    />
                   </FormControl>
-                  <FormDescription>Enter the recurring budget amount in your currency.</FormDescription>
+                  <FormDescription>
+                    Enter the recurring budget amount in your currency.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={recurringForm.control}
               name="recurringPeriod"
@@ -156,21 +188,28 @@ export const BudgetForm = () => {
                       defaultValue={field.value}
                       className="flex flex-col space-y-1"
                     >
-                      {["DAILY", "WEEKLY", "MONTHLY", "YEARLY"].map((period) => (
-                        <FormItem key={period} className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value={period} />
-                          </FormControl>
-                          <FormLabel className="font-normal">{period.charAt(0) + period.slice(1).toLowerCase()}</FormLabel>
-                        </FormItem>
-                      ))}
+                      {["DAILY", "WEEKLY", "MONTHLY", "YEARLY"].map(
+                        (period) => (
+                          <FormItem
+                            key={period}
+                            className="flex items-center space-x-3 space-y-0"
+                          >
+                            <FormControl>
+                              <RadioGroupItem value={period} />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              {period.charAt(0) + period.slice(1).toLowerCase()}
+                            </FormLabel>
+                          </FormItem>
+                        )
+                      )}
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <Button type="submit" disabled={loading}>
               {loading ? "Creating..." : "Create Recurring Budget"}
             </Button>
@@ -179,7 +218,10 @@ export const BudgetForm = () => {
       </TabsContent>
       <TabsContent value="one-time">
         <Form {...oneTimeForm}>
-          <form onSubmit={oneTimeForm.handleSubmit(onSubmitOneTime)} className="space-y-8">
+          <form
+            onSubmit={oneTimeForm.handleSubmit(onSubmitOneTime)}
+            className="space-y-8"
+          >
             <FormField
               control={oneTimeForm.control}
               name="name"
@@ -189,12 +231,14 @@ export const BudgetForm = () => {
                   <FormControl>
                     <Input placeholder="Enter budget name" {...field} />
                   </FormControl>
-                  <FormDescription>Give your one-time budget a descriptive name.</FormDescription>
+                  <FormDescription>
+                    Give your one-time budget a descriptive name.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             {fields.map((field, index) => (
               <div key={field.id} className="flex items-end space-x-2">
                 <FormField
@@ -217,20 +261,34 @@ export const BudgetForm = () => {
                     <FormItem className="flex-grow">
                       <FormLabel>Amount</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="Enter amount" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="Enter amount"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="button" variant="destructive" onClick={() => remove(index)}>Remove</Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => remove(index)}
+                >
+                  Remove
+                </Button>
               </div>
             ))}
-            
-            <Button type="button" variant="outline" onClick={() => append({ name: "", amount: 0 })}>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => append({ name: "", amount: 0 })}
+            >
               Add Budget Item
             </Button>
-            
+
             <Button type="submit" disabled={loading}>
               {loading ? "Creating..." : "Create One-Time Budget"}
             </Button>
