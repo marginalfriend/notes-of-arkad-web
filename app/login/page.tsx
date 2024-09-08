@@ -58,8 +58,8 @@ const Login = () => {
       });
 
       if (response.ok) {
-        const { accessToken } = await response.json();
-        login(accessToken);
+        const { accessToken, refreshToken } = await response.json();
+        login(accessToken, refreshToken);
         router.push("/dashboard");
         toast({
           title: "Login successful",

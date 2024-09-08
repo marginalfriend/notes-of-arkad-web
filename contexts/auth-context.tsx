@@ -7,9 +7,12 @@ import { useRouter } from "next/navigation";
 export interface AuthContextType {
   isAuthenticated: boolean;
   user: { id: string; username: string } | null;
-  login: (token: string) => void;
+  isLoading: boolean; // Add this
+  login: (accessToken: string) => void;
   logout: () => void;
   getAccessToken: () => Promise<string | null>;
+  refreshAccessToken: () => Promise<string | null>;
+  isInitialized: boolean; // Add this
 }
 
 // Create the AuthContext with default values
@@ -24,11 +27,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     null
   );
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  const login = (token: string) => {
-    setAccessToken(token);
-    const decodedToken = jwtDecode(token) as { id: string; username: string };
-    setUser(decodedToken);
+  const login = (accessToken: string) => {
+    setAccessToken(accessToken);
+    const decodedToken = jwtDecode<JwtPayload>(accessToken);
+    setUser({ id: decodedToken.id, username: decodedToken.username });
     setIsAuthenticated(true);
   };
 
@@ -46,41 +51,49 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshAccessToken = async (): Promise<string | null> => {
     try {
-      const response = await fetch("/api/auth/refresh", { method: "POST" });
+      const response = await fetch("/api/auth/refresh", {
+        method: "POST",
+        credentials: "include",
+      });
       if (response.ok) {
         const { accessToken } = await response.json();
         setAccessToken(accessToken);
         return accessToken;
+      } else {
+        // Instead of logging out here, throw an error or return a specific value
+        throw new Error("Token refresh failed");
       }
     } catch (error) {
       console.error("Error refreshing token:", error);
+      // Consider not logging out here, but instead returning null or throwing
+      return null;
     }
-    return null;
   };
 
   const getAccessToken = async (): Promise<string | null> => {
     if (!accessToken) {
-      return null;
+      return await refreshAccessToken(); // Try to refresh if no token exists
     }
 
     try {
       const decodedToken = jwtDecode(accessToken) as { exp: number };
       const currentTime = Date.now() / 1000;
 
-      if (decodedToken.exp < currentTime) {
-        // Token has expired, try to refresh
+      // If token is expired or about to expire in the next minute, refresh it
+      if (decodedToken.exp - currentTime < 60) {
         return await refreshAccessToken();
       }
 
       return accessToken;
     } catch (error) {
       console.error("Error decoding token:", error);
-      return null;
+      return await refreshAccessToken(); // Try to refresh on decode error
     }
   };
 
   useEffect(() => {
     const checkAuth = async () => {
+      setIsLoading(true);
       const token = await getAccessToken();
       if (token) {
         try {
@@ -92,23 +105,48 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setUser(data.user);
             setIsAuthenticated(true);
           } else {
-            logout();
+            setUser(null);
+            setIsAuthenticated(false);
+            router.push("/auth/login");
           }
         } catch (error) {
           console.error("Error checking authentication:", error);
-          logout();
+          setUser(null);
+          setIsAuthenticated(false);
+          router.push("/auth/login");
         }
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+        router.push("/auth/login");
       }
+      setIsLoading(false);
+      setIsInitialized(true);
     };
 
     checkAuth();
-  }, []);
+  }, [router]);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, login, logout, getAccessToken }}
+      value={{
+        isAuthenticated,
+        user,
+        isLoading,
+        isInitialized,
+        login,
+        logout,
+        getAccessToken,
+        refreshAccessToken,
+      }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
+
+interface JwtPayload {
+  id: string;
+  username: string;
+  exp: number;
+}

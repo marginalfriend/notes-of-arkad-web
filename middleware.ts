@@ -11,19 +11,16 @@ export default async function middleware(req: NextRequest) {
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
-  // 3. Get the token from the Authorization header
-  const token = req.cookies.get("refreshToken")?.value;
+  // Check for the refresh token in cookies
+  const refreshToken = req.cookies.get("refreshToken")?.value;
 
-  // 4. Verify the token
-  const user = token ? await verifyAccessToken(token) : null;
-
-  // 5. Redirect to /auth/login if the user is not authenticated
-  if (isProtectedRoute && !user) {
+  // For protected routes, redirect to login if no refresh token
+  if (isProtectedRoute && !refreshToken) {
     return NextResponse.redirect(new URL("/auth/login", req.nextUrl));
   }
 
-  // 6. Redirect to /dashboard if the user is authenticated
-  if (isPublicRoute && user && !req.nextUrl.pathname.startsWith("/dashboard")) {
+  // For public routes, redirect to dashboard if refresh token exists
+  if (isPublicRoute && refreshToken && !path.startsWith("/dashboard")) {
     return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
   }
 

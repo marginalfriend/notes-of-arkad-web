@@ -17,6 +17,13 @@ export const generateTokens = async (user: { id: string; username: string }) => 
   return { accessToken, refreshToken };
 };
 
+export const generateAccessToken = async (userId: string, username: string) => {
+  return await new SignJWT({ id: userId, username })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('15m')
+    .sign(JWT_SECRET);
+};
+
 export const verifyAccessToken = async (token: string) => {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
