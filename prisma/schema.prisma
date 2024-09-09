@@ -96,19 +96,21 @@ model RecurringBudget {
 model RecurringBudgetExpense {
   id                String          @id @default(cuid())
   name              String
+  amount            Float
+  date              DateTime
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   recurringBudgetId String
   recurringBudget   RecurringBudget @relation(fields: [recurringBudgetId], references: [id])
-  amount            Float
 }
 
 model Expense {
-  id String @id @default(cuid())
-  name String
-  amount Float
+  id        String   @id @default(cuid())
+  name      String
+  amount    Float
+  date      DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   profileId String
-  profile Profile @relation(fields: [profileId], references: [id])
+  profile   Profile  @relation(fields: [profileId], references: [id])
 }

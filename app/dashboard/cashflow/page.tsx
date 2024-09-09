@@ -1,10 +1,11 @@
 import React from "react";
+import CreateCashflowDialog from "./_components/create-cashflow-dialog";
 
 const CashflowTable = () => {
   return (
-		<div>
-			<h1>Cashflow</h1>
-		</div>
+    <div>
+      <CreateCashflowDialog />
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { CreateBudgetDialog } from './components/create-budget-dialog'
+import { CreateBudgetDialog } from './_components/create-budget-dialog'
 
 const BudgetPage = () => {
   return (

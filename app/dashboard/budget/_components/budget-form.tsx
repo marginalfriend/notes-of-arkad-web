@@ -32,7 +32,7 @@ interface BudgetFormProps {
   onSuccess?: () => void;
 }
 
-const recurringBudgetSchema = z.object({
+const 	recurringBudgetSchema = z.object({
   name: z.string().min(1, "Name is required").max(255, "Name is too long"),
   amount: z.coerce.number().positive("Amount must be positive"),
   recurringPeriod: z.enum(["DAILY", "WEEKLY", "MONTHLY", "YEARLY"], {

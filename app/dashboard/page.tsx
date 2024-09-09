@@ -44,7 +44,7 @@ export default function Dashboard() {
       <div className="p-2 container">
         <div className="grid grid-cols-3 gap-2">
           <div className="col-span-2 grid grid-cols-2 gap-2">
-            <div className="p-2 w-full border rounded-lg shadow">
+            <div className="p-2 w-full border rounded-lg">
               <div className="flex w-full justify-between text-green-700">
                 <h1 className="text-sm">Income</h1>
                 <ArrowDownOnSquareIcon className="w-4 h-4" />
@@ -58,7 +58,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="p-2 w-full border rounded-lg shadow">
+            <div className="p-2 w-full border rounded-lg">
               <div className="flex w-full justify-between text-red-700">
                 <h1 className="text-sm">Expense</h1>
                 <ArrowUpOnSquareIcon className="w-4 h-4" />
