@@ -4,7 +4,7 @@ import { z } from "zod"; // For input validation
 import { verifyAccessToken } from "@/lib/auth";
 
 const recurringBudgetSchema = z.object({
-  profileId: z.string().uuid(),
+  profileId: z.string().cuid(),
   name: z.string().min(1).max(255),
   recurringPeriod: z.enum(["DAILY", "WEEKLY", "MONTHLY", "YEARLY"]),
   recurringAmount: z.number().positive(),
@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.log(error);
       return NextResponse.json({ error: error.issues }, { status: 400 });
     } else {
       return NextResponse.json(

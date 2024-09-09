@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthFetch } from "@/hooks/use-auth-fetch";
+import { useProfile } from "@/contexts/profile-context";
 
 const recurringBudgetSchema = z.object({
   name: z.string().min(1, "Name is required").max(255, "Name is too long"),
@@ -44,6 +45,7 @@ export const BudgetForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const authFetch = useAuthFetch();
+  const { currentProfile } = useProfile();
 
   const recurringForm = useForm<z.infer<typeof recurringBudgetSchema>>({
     resolver: zodResolver(recurringBudgetSchema),
@@ -70,12 +72,25 @@ export const BudgetForm = () => {
   const onSubmitRecurring = async (
     data: z.infer<typeof recurringBudgetSchema>
   ) => {
+    if (!currentProfile) {
+      toast({
+        title: "Error",
+        description: "No profile selected. Please select a profile first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await authFetch("/api/budget/recurring", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          profileId: currentProfile.id,
+          recurringAmount: data.amount,
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to create recurring budget");
@@ -97,12 +112,25 @@ export const BudgetForm = () => {
   };
 
   const onSubmitOneTime = async (data: z.infer<typeof oneTimeBudgetSchema>) => {
+    if (!currentProfile) {
+      toast({
+        title: "Error",
+        description: "No profile selected. Please select a profile first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await authFetch("/api/budget/one-time", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          profileId: currentProfile.id,
+          oneTimeBudgetItemRequest: data.oneTimeBudgetItems,
+        }),
       });
 
       if (!response.ok) {

@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -27,7 +26,13 @@ const formSchema = z.object({
   }),
 });
 
-export function CreateProfileDialog({ isOpen }: { isOpen: boolean }) {
+export function CreateProfileDialog({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const authFetch = useAuthFetch();
@@ -59,7 +64,7 @@ export function CreateProfileDialog({ isOpen }: { isOpen: boolean }) {
 
       const profile = await response.json();
       console.log("Profile created:", profile);
-      // TODO: Handle successful profile creation (e.g., close dialog, update UI)
+      setIsOpen(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -68,10 +73,7 @@ export function CreateProfileDialog({ isOpen }: { isOpen: boolean }) {
   }
 
   return (
-    <Dialog open={isOpen ? isOpen : false}>
-      <DialogTrigger asChild>
-        <Button variant="outline">Create Profile</Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create Profile</DialogTitle>
