@@ -1,8 +1,5 @@
 import React from 'react'
 
-/* TODO: Add a table to display the cashflow
-*/
-
 const CashflowTable = () => {
   return (
     <div>

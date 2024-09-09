@@ -16,10 +16,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthFetch } from "@/hooks/use-auth-fetch";
 import { useProfile } from "@/contexts/profile-context";
+import { TrashIcon } from "@heroicons/react/24/outline";
+
+interface BudgetFormProps {
+  onSuccess?: () => void;
+}
 
 const recurringBudgetSchema = z.object({
   name: z.string().min(1, "Name is required").max(255, "Name is too long"),
@@ -41,7 +52,7 @@ const oneTimeBudgetSchema = z.object({
     .min(1, "At least one budget item is required"),
 });
 
-export const BudgetForm = () => {
+export const BudgetForm: React.FC<BudgetFormProps> = ({ onSuccess }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const authFetch = useAuthFetch();
@@ -100,6 +111,7 @@ export const BudgetForm = () => {
         title: "Recurring budget created",
         description: "Your recurring budget has been created successfully",
       });
+      onSuccess?.(); // Call onSuccess callback
     } catch (error) {
       toast({
         title: "Error",
@@ -143,6 +155,7 @@ export const BudgetForm = () => {
         title: "One-time budget created",
         description: "Your one-time budget has been created successfully",
       });
+      onSuccess?.(); // Call onSuccess callback
     } catch (error) {
       toast({
         title: "Error",
@@ -210,29 +223,23 @@ export const BudgetForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Recurring Period</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-1"
-                    >
-                      {["DAILY", "WEEKLY", "MONTHLY", "YEARLY"].map(
-                        (period) => (
-                          <FormItem
-                            key={period}
-                            className="flex items-center space-x-3 space-y-0"
-                          >
-                            <FormControl>
-                              <RadioGroupItem value={period} />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {period.charAt(0) + period.slice(1).toLowerCase()}
-                            </FormLabel>
-                          </FormItem>
-                        )
-                      )}
-                    </RadioGroup>
-                  </FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a recurring period" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {["DAILY", "WEEKLY", "MONTHLY", "YEARLY"].map((period) => (
+                        <SelectItem key={period} value={period}>
+                          {period.charAt(0) + period.slice(1).toLowerCase()}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Choose how often this budget should recur.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -302,16 +309,18 @@ export const BudgetForm = () => {
                 <Button
                   type="button"
                   variant="destructive"
+									className="w-9 h-9 p-0"
                   onClick={() => remove(index)}
                 >
-                  Remove
+                  <TrashIcon className="w-4 h-4"/>
                 </Button>
               </div>
             ))}
 
             <Button
               type="button"
-              variant="outline"
+              variant="secondary"
+              className="w-full"
               onClick={() => append({ name: "", amount: 0 })}
             >
               Add Budget Item
