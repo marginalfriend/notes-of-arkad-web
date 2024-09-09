@@ -3,10 +3,9 @@
 import React, { useState } from "react";
 import {
   ArrowRightStartOnRectangleIcon,
-  HomeIcon,
   BanknotesIcon,
   ClipboardDocumentListIcon,
-  PlusIcon,
+  PresentationChartLineIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -21,12 +20,13 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { usePathname, useRouter } from "next/navigation";
 
 const navItems = [
   {
-    name: "Home",
+    name: "Dashboard",
     href: "/dashboard",
-    icon: <HomeIcon className="w-4 h-4" />,
+    icon: <PresentationChartLineIcon className="w-4 h-4" />,
   },
   {
     name: "Cashflow",
@@ -44,6 +44,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { logout } = useAuth();
   const { currentProfile, profiles, loading, setCurrentProfile } = useProfile();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const pathname = usePathname();
 
   if (loading) {
     return (
@@ -97,7 +98,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 <li key={item.name} className="w-full">
                   <Link href={item.href}>
                     <Button
-                      variant="ghost"
+                      variant={pathname === item.href ? "secondary" : "ghost"}
                       className="w-full flex justify-start items-center gap-2"
                     >
                       {item.icon}
