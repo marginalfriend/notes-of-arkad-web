@@ -17,7 +17,7 @@ export const CreateBudgetDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild className="w-full">
         <Button variant="outline">Create New Budget</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] lg:max-w-[600px]">

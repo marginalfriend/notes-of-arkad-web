@@ -23,7 +23,7 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Profile Profile[]
+  profile Profile[]
 }
 
 model Profile {
@@ -36,13 +36,21 @@ model Profile {
 
   oneTimeBudget   OneTimeBudget[]
   recurringBudget RecurringBudget[]
+  noBudget        NoBudget[]
+}
 
-  Expense Expense[]
+model NoBudget {
+  id        String  @id @default(cuid())
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id])
+
+  expenses Expense[]
 }
 
 model OneTimeBudget {
   id        String   @id @default(cuid())
-  name      String
+  title     String
+  icon      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   profileId String
@@ -53,24 +61,15 @@ model OneTimeBudget {
 
 model OneTimeBudgetItem {
   id              String        @id @default(cuid())
-  name            String
+  title           String
+  icon            String
   amount          Float
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   oneTimeBudgetId String
   oneTimeBudget   OneTimeBudget @relation(fields: [oneTimeBudgetId], references: [id])
 
-  OneTimeBudgetExpense OneTimeBudgetExpense[]
-}
-
-model OneTimeBudgetExpense {
-  id                  String            @id @default(cuid())
-  name                String
-  amount              Float
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
-  oneTimeBudgetItemId String
-  oneTimeBudgetItem   OneTimeBudgetItem @relation(fields: [oneTimeBudgetItemId], references: [id])
+  expenses Expense[]
 }
 
 enum RecurringPeriod {
@@ -82,35 +81,27 @@ enum RecurringPeriod {
 
 model RecurringBudget {
   id              String          @id @default(cuid())
-  name            String
+  title           String
+  icon            String
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  profileId       String
-  profile         Profile         @relation(fields: [profileId], references: [id])
   recurringPeriod RecurringPeriod
   recurringAmount Float
+  profileId       String
+  profile         Profile         @relation(fields: [profileId], references: [id])
 
-  RecurringBudgetExpense RecurringBudgetExpense[]
-}
-
-model RecurringBudgetExpense {
-  id                String          @id @default(cuid())
-  name              String
-  amount            Float
-  date              DateTime
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-  recurringBudgetId String
-  recurringBudget   RecurringBudget @relation(fields: [recurringBudgetId], references: [id])
+  expenses Expense[]
 }
 
 model Expense {
   id        String   @id @default(cuid())
-  name      String
+  title     String
   amount    Float
   date      DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  profileId String
-  profile   Profile  @relation(fields: [profileId], references: [id])
+
+  recurringBudgets  RecurringBudget[]
+  oneTimeBudgetItem OneTimeBudgetItem[]
+  noBudget          NoBudget[]
 }

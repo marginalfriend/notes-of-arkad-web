@@ -19,8 +19,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuthFetch } from "@/hooks/use-auth-fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -42,6 +44,10 @@ const expensesSchema = z.object({
 });
 
 const CreateCashflowDialog = () => {
+  const [recurringBudgets, setRecurringBudgets] = useState([]);
+  const [oneTimeBudgets, setOneTimeBudgets] = useState([]);
+  const authFetch = useAuthFetch();
+
   const expensesForm = useForm<z.infer<typeof expensesSchema>>({
     resolver: zodResolver(expensesSchema),
     defaultValues: {
@@ -50,6 +56,10 @@ const CreateCashflowDialog = () => {
       description: "",
     },
   });
+
+  useEffect(() => {
+    authFetch("/api/budget/recurring")
+  }, []);
 
   return (
     <Dialog>
@@ -64,7 +74,6 @@ const CreateCashflowDialog = () => {
 
         <Form {...expensesForm}>
           <form className="space-y-8">
-
             <FormField
               control={expensesForm.control}
               name="name"
@@ -82,7 +91,32 @@ const CreateCashflowDialog = () => {
               )}
             />
 
-						<Button type="submit" className="w-full">Create Expense</Button>
+            <FormField
+              control={expensesForm.control}
+              name="budgetReference"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Budget Reference</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value?.id}
+                      onValueChange={(value) => {
+                        // Select Budget
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </Select>
+                  </FormControl>
+                  <FormDescription>Refer to a budget if any</FormDescription>
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" className="w-full">
+              Create Expense
+            </Button>
           </form>
         </Form>
       </DialogContent>

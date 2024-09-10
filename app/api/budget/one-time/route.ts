@@ -66,7 +66,8 @@ export async function POST(request: NextRequest) {
     return await prisma.$transaction(async (tx) => {
       const oneTimeBudget = await tx.oneTimeBudget.create({
         data: {
-          name: name,
+          title: name,
+					icon: "💵",
           profileId: profileId,
         },
         include: {
@@ -86,7 +87,8 @@ export async function POST(request: NextRequest) {
       for (const item of oneTimeBudgetItemRequest) {
         await tx.oneTimeBudgetItem.create({
           data: {
-            name: item.name,
+            title: item.name,
+						icon: "💵",
             amount: item.amount,
             oneTimeBudgetId: oneTimeBudget.id,
           },
