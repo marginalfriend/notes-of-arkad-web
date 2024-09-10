@@ -16,92 +16,44 @@ datasource db {
 }
 
 model Account {
-  id        String   @id @default(cuid())
-  email     String?  @unique
-  username  String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  profile Profile[]
+  id              String            @id @default(cuid())
+  email           String            @unique
+  username        String
+  password        String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  IncomeCategory  IncomeCategory[]
+  ExpenseCategory ExpenseCategory[]
 }
 
-model Profile {
+model IncomeCategory {
   id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  title     String   @unique
   accountId String
   account   Account  @relation(fields: [accountId], references: [id])
-
-  oneTimeBudget   OneTimeBudget[]
-  recurringBudget RecurringBudget[]
-  noBudget        NoBudget[]
+  Income    Income[]
 }
 
-model NoBudget {
-  id        String  @id @default(cuid())
-  profileId String
-  profile   Profile @relation(fields: [profileId], references: [id])
-
-  expenses Expense[]
+model Income {
+  id          String         @id @default(cuid())
+  amount      Float
+  description String?
+  categoryId  String
+  category    IncomeCategory @relation(fields: [categoryId], references: [id])
 }
 
-model OneTimeBudget {
-  id        String   @id @default(cuid())
-  title     String
-  icon      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  profileId String
-  profile   Profile  @relation(fields: [profileId], references: [id])
-
-  OneTimeBudgetItem OneTimeBudgetItem[]
-}
-
-model OneTimeBudgetItem {
-  id              String        @id @default(cuid())
-  title           String
-  icon            String
-  amount          Float
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  oneTimeBudgetId String
-  oneTimeBudget   OneTimeBudget @relation(fields: [oneTimeBudgetId], references: [id])
-
-  expenses Expense[]
-}
-
-enum RecurringPeriod {
-  DAILY
-  WEEKLY
-  MONTHLY
-  YEARLY
-}
-
-model RecurringBudget {
-  id              String          @id @default(cuid())
-  title           String
-  icon            String
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  recurringPeriod RecurringPeriod
-  recurringAmount Float
-  profileId       String
-  profile         Profile         @relation(fields: [profileId], references: [id])
-
-  expenses Expense[]
+model ExpenseCategory {
+  id        String    @id @default(cuid())
+  title     String    @unique
+  accountId String
+  account   Account   @relation(fields: [accountId], references: [id])
+  Expense   Expense[]
 }
 
 model Expense {
-  id        String   @id @default(cuid())
-  title     String
-  amount    Float
-  date      DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  recurringBudgets  RecurringBudget[]
-  oneTimeBudgetItem OneTimeBudgetItem[]
-  noBudget          NoBudget[]
+  id          String          @id @default(cuid())
+  amount      Float
+  description String?
+  categoryId  String
+  category    ExpenseCategory @relation(fields: [categoryId], references: [id])
 }

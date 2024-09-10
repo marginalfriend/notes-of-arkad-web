@@ -3,6 +3,7 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
+import { LOGIN } from "@/constants/routes";
 
 export interface AuthContextType {
   isAuthenticated: boolean;
@@ -43,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAccessToken(null);
       setUser(null);
       setIsAuthenticated(false);
-      router.push("/auth/login");
+      router.push(LOGIN);
     } catch (error) {
       console.error("Error logging out:", error);
     }
@@ -59,23 +60,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const { accessToken } = await response.json();
         setAccessToken(accessToken);
         return accessToken;
+      } else if (response.status === 401 || response.status === 403) {
+        return null;
       } else {
-        // Instead of logging out here, throw an error or return a specific value
-        throw new Error("Token refresh failed");
+        throw new Error("Token refresh failed.");
       }
     } catch (error) {
       console.error("Error refreshing token:", error);
-      // Consider not logging out here, but instead returning null or throwing
       return null;
     }
   };
 
   const getAccessToken = async (): Promise<string | null> => {
-    if (!accessToken) {
-      return await refreshAccessToken(); // Try to refresh if no token exists
-    }
-
     try {
+      if (!accessToken) {
+        return await refreshAccessToken(); // Try to refresh if no token exists
+      }
+
       const decodedToken = jwtDecode(accessToken) as { exp: number };
       const currentTime = Date.now() / 1000;
 
@@ -107,18 +108,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           } else {
             setUser(null);
             setIsAuthenticated(false);
-            router.push("/auth/login");
+            router.push(LOGIN);
           }
         } catch (error) {
           console.error("Error checking authentication:", error);
           setUser(null);
           setIsAuthenticated(false);
-          router.push("/auth/login");
+          router.push(LOGIN);
         }
       } else {
         setUser(null);
         setIsAuthenticated(false);
-        router.push("/auth/login");
+        router.push(LOGIN);
       }
       setIsLoading(false);
       setIsInitialized(true);

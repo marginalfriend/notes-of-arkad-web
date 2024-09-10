@@ -23,6 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { FormProvider } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { LOGIN } from "@/constants/routes";
 
 type RegisterFormData = {
   username: string;
@@ -40,10 +41,10 @@ const Register = () => {
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username: data.username,
@@ -189,7 +190,7 @@ const Register = () => {
         <CardFooter>
           <p className="text-sm text-gray-500">
             Already have an account?{" "}
-            <Link href="/auth/login">
+            <Link href={LOGIN}>
               <span className="text-blue-400 hover:underline">Login here</span>
             </Link>
           </p>

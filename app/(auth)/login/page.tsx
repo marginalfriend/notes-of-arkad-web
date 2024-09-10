@@ -10,12 +10,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Form,
   FormField,
   FormItem,
   FormLabel,
   FormControl,
-  FormMessage,
 } from "@/components/ui/form";
 import {
   Card,
@@ -26,6 +24,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { REGISTER } from "@/constants/routes";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -58,8 +57,8 @@ const Login = () => {
       });
 
       if (response.ok) {
-        const { accessToken, refreshToken } = await response.json();
-        login(accessToken, refreshToken);
+        const { accessToken } = await response.json();
+        login(accessToken);
         router.push("/dashboard");
         toast({
           title: "Login successful",
@@ -140,7 +139,7 @@ const Login = () => {
         <CardFooter>
           <p className="text-sm text-gray-500">
             Don't have an account?{" "}
-            <Link href="/auth/register">
+            <Link href={REGISTER}>
               <span className="text-blue-400 hover:underline">
                 Register here
               </span>

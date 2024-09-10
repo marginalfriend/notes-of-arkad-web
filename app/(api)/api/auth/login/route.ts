@@ -4,9 +4,9 @@ import prisma from "@/lib/prisma";
 import { generateTokens } from "@/lib/auth";
 
 export async function POST(request: Request) {
-  const { username, password } = await request.json();
+  const { email, password } = await request.json();
 
-  const user = await prisma.account.findUnique({ where: { username } });
+  const user = await prisma.account.findUnique({ where: { email } });
 
   if (!user || !(await compare(password, user.password))) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
