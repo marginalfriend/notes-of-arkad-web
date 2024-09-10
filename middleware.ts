@@ -3,7 +3,7 @@ import { verifyRefreshToken } from "./lib/auth";
 import { LOGIN, REGISTER } from "./constants/routes";
 
 // 1. Specify protected and public routes
-const protectedRoutes = ["/dashboard"];
+const protectedRoutes = ["/entries", "/reports"];
 const publicRoutes = [LOGIN, REGISTER, "/"];
 
 export default async function middleware(req: NextRequest) {
@@ -21,8 +21,8 @@ export default async function middleware(req: NextRequest) {
 	}
 
 	// For public routes, redirect to dashboard if refresh token is valid
-	if (isPublicRoute && refreshToken && !path.startsWith("/dashboard")) {
-		return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+	if (isPublicRoute && refreshToken && !path.startsWith("/entries")) {
+		return NextResponse.redirect(new URL("/entries", req.nextUrl));
 	}
 
 	return NextResponse.next();

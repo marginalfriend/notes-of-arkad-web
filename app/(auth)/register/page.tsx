@@ -26,6 +26,7 @@ import Link from "next/link";
 import { LOGIN } from "@/constants/routes";
 
 type RegisterFormData = {
+  email: string;
   username: string;
   password: string;
   confirmPassword: string;
@@ -47,6 +48,7 @@ const Register = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          email: data.email,
           username: data.username,
           password: data.password,
         }),
@@ -93,6 +95,29 @@ const Register = () => {
         <CardContent>
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                name="email"
+                control={form.control}
+                rules={{
+                  required: "Email is required",
+                  pattern: {
+                    value:
+                      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    message: "Invalid email format",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="username" />
+                    </FormControl>
+                    {fieldState.error && (
+                      <p className="text-red-500">{fieldState.error.message}</p>
+                    )}
+                  </FormItem>
+                )}
+              />
               <FormField
                 name="username"
                 control={form.control}
