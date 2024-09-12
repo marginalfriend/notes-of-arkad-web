@@ -18,7 +18,6 @@ import { ArrowUpDown } from "lucide-react";
 export type Entry = {
   id: string;
   date: Date;
-  month: string;
   amount: number;
   category: string;
   incomeExpense: "income" | "expense";
@@ -32,6 +31,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
+					className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Date
@@ -39,6 +39,12 @@ export const columns: ColumnDef<Entry>[] = [
         </Button>
       );
     },
+    cell: ({ row }) =>
+      row.original.date.toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }),
   },
   {
     accessorKey: "month",
@@ -46,6 +52,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
+					className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Month
@@ -54,7 +61,7 @@ export const columns: ColumnDef<Entry>[] = [
       );
     },
     cell: ({ row }) => {
-      new Intl.DateTimeFormat("en-US", { month: "long" }).format(
+      return new Intl.DateTimeFormat("en-US", { month: "long" }).format(
         row.original.date
       );
     },
@@ -65,6 +72,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
+					className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Amount
@@ -72,6 +80,11 @@ export const columns: ColumnDef<Entry>[] = [
         </Button>
       );
     },
+    cell: ({ row }) =>
+      row.original.amount.toLocaleString("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      }),
   },
   {
     accessorKey: "category",
@@ -79,6 +92,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
+					className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Category
@@ -93,6 +107,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
+					className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Income / Expense
@@ -100,6 +115,12 @@ export const columns: ColumnDef<Entry>[] = [
         </Button>
       );
     },
+    cell: ({ row }) =>
+      row.original.incomeExpense === "income" ? (
+        <p className="text-center bg-green-300/50 rounded-sm">Income</p>
+      ) : (
+        <p className="text-center bg-red-300/50 rounded-sm">Expense</p>
+      ),
   },
   {
     accessorKey: "description",
@@ -107,6 +128,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
+					className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Description

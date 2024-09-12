@@ -16,14 +16,14 @@ datasource db {
 }
 
 model Account {
-  id              String            @id @default(cuid())
-  email           String            @unique
-  username        String
-  password        String
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  IncomeCategory  IncomeCategory[]
-  ExpenseCategory ExpenseCategory[]
+  id                String            @id @default(cuid())
+  email             String            @unique
+  username          String
+  password          String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  incomeCategories  IncomeCategory[]
+  expenseCategories ExpenseCategory[]
 }
 
 model IncomeCategory {
@@ -31,7 +31,7 @@ model IncomeCategory {
   title     String   @unique
   accountId String
   account   Account  @relation(fields: [accountId], references: [id])
-  Income    Income[]
+  income    Income[]
 }
 
 model Income {
@@ -48,7 +48,7 @@ model ExpenseCategory {
   title     String    @unique
   accountId String
   account   Account   @relation(fields: [accountId], references: [id])
-  Expense   Expense[]
+  expenses  Expense[]
 }
 
 model Expense {

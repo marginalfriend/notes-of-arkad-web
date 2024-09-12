@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyRefreshToken } from "./lib/auth";
+import { verifyAccessToken, verifyRefreshToken } from "./lib/auth";
 import { LOGIN, REGISTER } from "./constants/routes";
 
 // 1. Specify protected and public routes
@@ -23,6 +23,24 @@ export default async function middleware(req: NextRequest) {
 	// For public routes, redirect to dashboard if refresh token is valid
 	if (isPublicRoute && refreshToken && !path.startsWith("/entries")) {
 		return NextResponse.redirect(new URL("/entries", req.nextUrl));
+	}
+
+	// For API, set the accountId as header
+	const isApi = req.nextUrl.pathname.startsWith('/api')
+	const isNotAuth = req.nextUrl.pathname.startsWith('/api/auth')
+	const headers = new Headers(req.headers)
+
+	if (isApi && isNotAuth && headers.get("Authorization")) {
+		const payload = await verifyAccessToken(headers.get("Authorization") as string);
+
+		if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+		console.log("Payload: ", payload)
+
+		headers.set("accountId", payload.id)
+		return NextResponse.next({
+			headers
+		})
 	}
 
 	return NextResponse.next();
