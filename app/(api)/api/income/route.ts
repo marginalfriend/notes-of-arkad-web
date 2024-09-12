@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { z, ZodError } from "zod";
+import { z } from "zod";
+import { handleError } from "../utils";
 
 const entryRequestSchema = z.object({
 	amount: z.number({ message: "Invalid amount type" }).nonnegative({ message: "Number must be positive" }),
@@ -12,7 +13,7 @@ const entryRequestSchema = z.object({
 // Create Income
 export const POST = async (request: NextRequest) => {
 	try {
-		const entryRequest = request.json()
+		const entryRequest = await request.json()
 		console.log("Entry request: ", entryRequest)
 
 		const accountId = request.headers.get("accountId") as string;
@@ -53,10 +54,6 @@ export const POST = async (request: NextRequest) => {
 		return NextResponse.json({ data }, { status: 201 })
 
 	} catch (error: any) {
-		if (error instanceof ZodError) {
-			return NextResponse.json({ error: error.issues }, { status: 400 })
-		} else {
-			return NextResponse.json({ error: "Internal server error" }, { status: 500 })
-		}
+		return handleError(error)
 	}
 }
