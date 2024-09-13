@@ -10,7 +10,6 @@ const entryRequestSchema = z.object({
 	description: z.nullable(z.string({ message: "Invalid description type" })),
 })
 
-// Create Income
 export const POST = async (request: NextRequest) => {
 	try {
 		const entryRequest = await request.json()
