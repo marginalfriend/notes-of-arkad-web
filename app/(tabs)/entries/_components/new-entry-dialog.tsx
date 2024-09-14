@@ -70,6 +70,7 @@ const NewEntryDialog = () => {
     []
   );
   const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [input, setInput] = useState("");
   const authFetch = useAuthFetch();
 
@@ -107,11 +108,25 @@ const NewEntryDialog = () => {
   };
 
   const handleSubmit = (values: z.infer<typeof newEntrySchema>) => {
-    console.log(values);
+    try {
+      authFetch(`/api/${incomeExpense}`, {
+        method: "POST",
+        body: JSON.stringify(values),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+        });
+
+      form.reset();
+      setOpenDialog(false);
+    } catch (error) {
+			
+		}
   };
 
   return (
-    <Dialog>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
         <Button className="gap-2 items-center justify-center">
           <Plus className="w-4 h-4" />
@@ -273,7 +288,8 @@ const NewEntryDialog = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Description <span className="text-muted-foreground">(optional)</span>
+                    Description{" "}
+                    <span className="text-muted-foreground">(optional)</span>
                   </FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="With da bois" {...field} />

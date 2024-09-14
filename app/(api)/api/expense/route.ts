@@ -8,7 +8,7 @@ const entryRequestSchema = z.object({
 	amount: z.number({ message: "Invalid amount type" }).nonnegative({ message: "Number must be positive" }),
 	date: z.coerce.date({ message: "Invalid date format" }),
 	categoryId: z.string({ message: "Invalid category format" }),
-	description: z.optional(z.string({ message: "Invalid description type" })),
+	description: z.nullable(z.string({ message: "Invalid description type" })),
 })
 
 export const POST = async (request: NextRequest) => {
@@ -30,7 +30,7 @@ export const POST = async (request: NextRequest) => {
 			return NextResponse.json({ error: "Account not found" }, { status: 401 });
 		}
 
-		const data = await prisma.income.create({
+		const data = await prisma.expense.create({
 			data: {
 				categoryId: validatedData.categoryId,
 				amount: validatedData.amount,
