@@ -4,7 +4,7 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 
 const categorySchema = z.object({
-	name: z.string(),
+	title: z.string(),
 	incomeExpense: z.enum(["income", "expense"]),
 })
 
@@ -21,10 +21,14 @@ export const POST = async (request: NextRequest) => {
 		console.log("Validated request: ", validatedData);
 
 		if (validatedData.incomeExpense === "income") {
-			const incomeCategory = prisma.incomeCategory.create({
+			const incomeCategory = await prisma.incomeCategory.create({
 				data: {
 					accountId: account.id,
-					title: validatedData.name,
+					title: validatedData.title,
+				},
+				select: {
+					id: true,
+					title: true,
 				}
 			})
 
@@ -36,7 +40,7 @@ export const POST = async (request: NextRequest) => {
 			const expenseCategory = prisma.expenseCategory.create({
 				data: {
 					accountId: account.id,
-					title: validatedData.name,
+					title: validatedData.title,
 				}
 			})
 
@@ -50,7 +54,7 @@ export const POST = async (request: NextRequest) => {
 
 export const GET = async (request: NextRequest) => {
 	const incomeExpense = request.nextUrl.searchParams.get("incomeExpense");
-	console.log("Income/Expense: ", incomeExpense)
+	console.log("[api/category | GET] Income/Expense: ", incomeExpense)
 
 	if (!incomeExpense) return NextResponse.json(
 		{ error: "Income / Expense must be defined in the search param e.g. api/category?incomeExpense=income" },
@@ -70,24 +74,24 @@ export const GET = async (request: NextRequest) => {
 	}
 
 	if (incomeExpense === "income") {
-		const incomeCategory = prisma.incomeCategory.findMany({
+		const incomeCategory = await prisma.incomeCategory.findMany({
 			where: {
 				accountId: account.id
 			}
 		})
 
 		console.log("Income category: ", incomeCategory)
-		return NextResponse.json({ incomeCategory }, { status: 201 })
+		return NextResponse.json({ incomeCategory }, { status: 200 })
 	}
 
 	if (incomeExpense === "expense") {
-		const expenseCategory = prisma.expenseCategory.findMany({
+		const expenseCategory = await prisma.expenseCategory.findMany({
 			where: {
 				accountId: account.id
 			}
 		})
 
 		console.log("Expense category: ", expenseCategory)
-		return NextResponse.json({ expenseCategory }, { status: 201 })
+		return NextResponse.json({ expenseCategory }, { status: 200 })
 	}
 }

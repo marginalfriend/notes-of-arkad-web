@@ -25,24 +25,6 @@ export default async function middleware(req: NextRequest) {
 		return NextResponse.redirect(new URL("/entries", req.nextUrl));
 	}
 
-	// For API, set the accountId as header
-	const isApi = req.nextUrl.pathname.startsWith('/api')
-	const isNotAuth = req.nextUrl.pathname.startsWith('/api/auth')
-	const headers = new Headers(req.headers)
-
-	if (isApi && isNotAuth && headers.get("Authorization")) {
-		const payload = await verifyAccessToken(headers.get("Authorization") as string);
-
-		if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-		console.log("Payload: ", payload)
-
-		headers.set("accountId", payload.id)
-		return NextResponse.next({
-			headers
-		})
-	}
-
 	return NextResponse.next();
 }
 

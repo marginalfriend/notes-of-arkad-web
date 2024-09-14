@@ -60,7 +60,7 @@ const newEntrySchema = z.object({
   date: z.coerce.date(),
   title: z.string(),
   incomeExpense: z.enum(["income", "expense"]),
-  amount: z.number().nonnegative(),
+  amount: z.coerce.number().nonnegative(),
   description: z.optional(z.coerce.string()),
   categoryId: z.string(),
 });
@@ -71,8 +71,8 @@ const NewEntryDialog = () => {
   );
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-
   const authFetch = useAuthFetch();
+
   const form = useForm<z.infer<typeof newEntrySchema>>({
     resolver: zodResolver(newEntrySchema),
     defaultValues: {
@@ -81,15 +81,35 @@ const NewEntryDialog = () => {
       categoryId: "",
     },
   });
+  const incomeExpense = form.getValues().incomeExpense;
+
+  const handleIncomeExpenseChange = (e: string) => {
+    authFetch(`/api/category?incomeExpense=${e}`)
+      .then((res) => res.json())
+      .then((data) => setCategories(data[`${e}Category`]));
+    form.setValue("categoryId", "");
+  };
+
+  const handleCreateCategory = () => {
+    authFetch("/api/category", {
+      method: "POST",
+      body: JSON.stringify({
+        title: input,
+        incomeExpense,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setCategories([...categories, data]);
+        form.setValue("categoryId", data.id);
+        setOpen(false);
+      });
+  };
 
   const handleSubmit = (values: z.infer<typeof newEntrySchema>) => {
     console.log(values);
   };
 
-  useEffect(() => {
-    const categories = authFetch("/api/category?incomeExpense=income");
-    console.log(categories);
-  }, []);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -115,7 +135,10 @@ const NewEntryDialog = () => {
                   <FormLabel>Income / Expense</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(e) => {
+                        field.onChange(e);
+                        handleIncomeExpenseChange(e);
+                      }}
                       defaultValue={field.value}
                     >
                       <SelectTrigger>
@@ -127,7 +150,7 @@ const NewEntryDialog = () => {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormDescription>Pick the cashflow type</FormDescription>
+                  <FormDescription>Money in or money out?</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -143,15 +166,18 @@ const NewEntryDialog = () => {
                     <Popover open={open} onOpenChange={setOpen}>
                       <PopoverTrigger asChild>
                         <Button
+                          disabled={incomeExpense === undefined}
                           variant="outline"
                           role="combobox"
                           aria-expanded={open}
-                          className="w-full justify-between"
+                          className="w-full justify-between font-normal"
                         >
                           {field.value
                             ? categories.find(
                                 (category) => category.id === field.value
                               )?.title
+                            : incomeExpense === undefined
+                            ? "Select income / expense first"
                             : "Select category..."}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
@@ -165,7 +191,11 @@ const NewEntryDialog = () => {
                           <CommandList>
                             <CommandEmpty>
                               {input ? (
-                                <Button variant={"ghost"} className="w-full">
+                                <Button
+                                  variant={"ghost"}
+                                  className="w-full"
+                                  onClick={handleCreateCategory}
+                                >
                                   {`Create "${input}"`}
                                 </Button>
                               ) : (
@@ -179,6 +209,7 @@ const NewEntryDialog = () => {
                                   key={category.id}
                                   onSelect={() => {
                                     form.setValue("categoryId", category.id);
+                                    setOpen(false);
                                   }}
                                 >
                                   {category.title}
@@ -241,7 +272,9 @@ const NewEntryDialog = () => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>
+                    Description <span className="text-muted-foreground">(optional)</span>
+                  </FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="With da bois" {...field} />
                   </FormControl>
