@@ -28,7 +28,7 @@ model Account {
 
 model IncomeCategory {
   id        String   @id @default(cuid())
-  title     String   @unique
+  title     String
   accountId String
   account   Account  @relation(fields: [accountId], references: [id])
   income    Income[]
@@ -45,7 +45,7 @@ model Income {
 
 model ExpenseCategory {
   id        String    @id @default(cuid())
-  title     String    @unique
+  title     String
   accountId String
   account   Account   @relation(fields: [accountId], references: [id])
   expenses  Expense[]

@@ -4,7 +4,6 @@ import { z } from "zod";
 import { getAccount, handleError } from "../utils";
 
 const entryRequestSchema = z.object({
-	title: z.string(),
 	amount: z.number({ message: "Invalid amount type" }).nonnegative({ message: "Number must be positive" }),
 	date: z.coerce.date({ message: "Invalid date format" }),
 	categoryId: z.string({ message: "Invalid category format" }),

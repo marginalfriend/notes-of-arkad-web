@@ -56,10 +56,10 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon, CheckIcon } from "@radix-ui/react-icons";
 import { revalidatePath } from "next/cache";
+import { useToast } from "@/hooks/use-toast";
 
 const newEntrySchema = z.object({
   date: z.coerce.date(),
-  title: z.string(),
   incomeExpense: z.enum(["income", "expense"]),
   amount: z.coerce.number().nonnegative(),
   description: z.optional(z.coerce.string()),
@@ -74,12 +74,12 @@ const NewEntryDialog = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [input, setInput] = useState("");
   const authFetch = useAuthFetch();
+  const toast = useToast();
 
   const form = useForm<z.infer<typeof newEntrySchema>>({
     resolver: zodResolver(newEntrySchema),
     defaultValues: {
       date: new Date(),
-      title: "",
       categoryId: "",
     },
   });
@@ -108,23 +108,22 @@ const NewEntryDialog = () => {
       });
   };
 
-  const handleSubmit = (values: z.infer<typeof newEntrySchema>) => {
+  const handleSubmit = async (values: z.infer<typeof newEntrySchema>) => {
     try {
-      authFetch(`/api/${incomeExpense}`, {
+      const res = await authFetch(`/api/${incomeExpense}`, {
         method: "POST",
         body: JSON.stringify(values),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-        });
+      });
+
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error);
+      }
 
       form.reset();
       revalidatePath("/entries", "page");
       setOpenDialog(false);
-    } catch (error) {
-			
-		}
+    } catch (error) {}
   };
 
   return (
@@ -249,21 +248,6 @@ const NewEntryDialog = () => {
                   <FormDescription>
                     Select your income / expense category
                   </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Eat out" {...field} />
-                  </FormControl>
-                  <FormDescription>Type a descriptive title</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
