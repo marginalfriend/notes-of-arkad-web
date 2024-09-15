@@ -16,9 +16,6 @@ export const POST = async (request: NextRequest) => {
 		const entryRequest = await request.json()
 		console.log("Entry request: ", entryRequest)
 
-		const accountId = request.headers.get("accountId") as string;
-		console.log("Account ID: ", accountId);
-
 		const validatedData = entryRequestSchema.parse(entryRequest);
 		console.log("Entry request: ", entryRequest);
 

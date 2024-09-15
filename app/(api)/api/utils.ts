@@ -1,5 +1,6 @@
 import { verifyAccessToken } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { Expense, Income } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
@@ -30,4 +31,60 @@ export const getAccount = async (request: NextRequest) => {
 	console.log("[UTILS | getAccount] account: ", account)
 
 	return account
+}
+
+export const toEntry = (income: IncomeExtended[], expense: ExpenseExtended[]) => {
+	let entries: Entry[] = [];
+
+	income.forEach(i => entries.push({
+		id: i.id,
+		incomeExpense: "income",
+		category: {
+			id: i.category.id,
+			title: i.category.title,
+		},
+		amount: i.amount,
+		date: i.date,
+		description: i.description,
+	}))
+
+	expense.forEach(e => entries.push({
+		id: e.id,
+		incomeExpense: "expense",
+		category: {
+			id: e.category.id,
+			title: e.category.title,
+		},
+		amount: e.amount,
+		date: e.date,
+		description: e.description,
+	}))
+
+	return entries;
+}
+
+type Entry = {
+	id: string;
+	incomeExpense: "income" | "expense";
+	category: {
+		id: string;
+		title: string
+	};
+	amount: number;
+	date: Date;
+	description: string | null;
+}
+
+type IncomeExtended = Income & {
+	category: {
+		id: string,
+		title: string,
+	}
+}
+
+type ExpenseExtended = Expense & {
+	category: {
+		id: string,
+		title: string,
+	}
 }
