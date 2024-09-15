@@ -14,10 +14,8 @@ export const handleError = (error: any) => {
 
 export const getAccount = async (request: NextRequest) => {
 	const token = request.headers.get("Authorization") as string;
-	console.log("[UTILS | getAccount] token: ", token);
 
 	const payload = await verifyAccessToken(token)
-	console.log("[UTILS | getAccount] payload: ", payload);
 
 	if (!payload) return null;
 
@@ -28,7 +26,6 @@ export const getAccount = async (request: NextRequest) => {
 			id,
 		}
 	})
-	console.log("[UTILS | getAccount] account: ", account)
 
 	return account
 }

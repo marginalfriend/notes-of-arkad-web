@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import NewEntryDialog from "@/app/(tabs)/entries/_components/new-entry-dialog";
+import { useAuth } from "@/hooks/use-auth";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,6 +41,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const { logout } = useAuth();
 
   const table = useReactTable({
     data,

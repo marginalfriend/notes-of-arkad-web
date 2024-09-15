@@ -40,5 +40,13 @@ export async function POST(request: NextRequest) {
 		path: "/",
 	});
 
+	response.cookies.set("accessToken", accessToken, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		sameSite: "strict",
+		maxAge: 60 * 60, // 1 hour
+		path: "/",
+	})
+
 	return response;
 }

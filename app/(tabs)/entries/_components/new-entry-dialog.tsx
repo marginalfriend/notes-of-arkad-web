@@ -55,6 +55,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { CalendarIcon, CheckIcon } from "@radix-ui/react-icons";
+import { revalidatePath } from "next/cache";
 
 const newEntrySchema = z.object({
   date: z.coerce.date(),
@@ -119,6 +120,7 @@ const NewEntryDialog = () => {
         });
 
       form.reset();
+      revalidatePath("/entries", "page");
       setOpenDialog(false);
     } catch (error) {
 			
