@@ -70,11 +70,12 @@ const NewEntryDialog = () => {
   const [categories, setCategories] = useState<{ id: string; title: string }[]>(
     []
   );
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [input, setInput] = useState("");
   const authFetch = useAuthFetch();
-  const toast = useToast();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof newEntrySchema>>({
     resolver: zodResolver(newEntrySchema),
@@ -86,26 +87,41 @@ const NewEntryDialog = () => {
   const incomeExpense = form.getValues().incomeExpense;
 
   const handleIncomeExpenseChange = (e: string) => {
+    setCategoriesLoading(true);
     authFetch(`/api/category?incomeExpense=${e}`)
       .then((res) => res.json())
       .then((data) => setCategories(data[`${e}Category`]));
     form.setValue("categoryId", "");
+    setCategoriesLoading(false);
   };
 
   const handleCreateCategory = () => {
-    authFetch("/api/category", {
-      method: "POST",
-      body: JSON.stringify({
-        title: input,
-        incomeExpense,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories([...categories, data]);
-        form.setValue("categoryId", data.id);
-        setOpen(false);
+    try {
+      authFetch("/api/category", {
+        method: "POST",
+        body: JSON.stringify({
+          title: input,
+          incomeExpense,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const newCategory = {
+            id: data[`${incomeExpense}Category`].id,
+            title: data[`${incomeExpense}Category`].title,
+          };
+          setCategories([...categories, newCategory]);
+          form.setValue("categoryId", newCategory.id);
+          setOpen(false);
+        });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error creating category",
+        description:
+          "There's an error while creating category, please try again.",
       });
+    }
   };
 
   const handleSubmit = async (values: z.infer<typeof newEntrySchema>) => {
@@ -123,7 +139,14 @@ const NewEntryDialog = () => {
       form.reset();
       revalidatePath("/entries", "page");
       setOpenDialog(false);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error creating entry",
+        description: "There's an error while creating entry, please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -206,7 +229,9 @@ const NewEntryDialog = () => {
                           />
                           <CommandList>
                             <CommandEmpty>
-                              {input ? (
+                              {categoriesLoading ? (
+                                "Loading categories..."
+                              ) : input ? (
                                 <Button
                                   variant={"ghost"}
                                   className="w-full"

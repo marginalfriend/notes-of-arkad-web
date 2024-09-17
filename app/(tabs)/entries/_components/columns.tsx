@@ -31,7 +31,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
-					className="w-full"
+          className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Date
@@ -52,7 +52,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
-					className="w-full"
+          className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Month
@@ -62,7 +62,7 @@ export const columns: ColumnDef<Entry>[] = [
     },
     cell: ({ row }) => {
       return new Intl.DateTimeFormat("en-US", { month: "long" }).format(
-        row.original.date
+        new Date(row.original.date)
       );
     },
   },
@@ -72,7 +72,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
-					className="w-full"
+          className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Amount
@@ -92,7 +92,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
-					className="w-full"
+          className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Category
@@ -107,7 +107,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
-					className="w-full"
+          className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Income / Expense
@@ -128,7 +128,7 @@ export const columns: ColumnDef<Entry>[] = [
       return (
         <Button
           variant="ghost"
-					className="w-full"
+          className="w-full"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Description

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import React, { ReactNode } from "react";
 import { Footer } from "./_components/footer";
 

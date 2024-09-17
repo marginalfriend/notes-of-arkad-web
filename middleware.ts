@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyAccessToken, verifyRefreshToken } from "./lib/auth";
-import { LOGIN, REGISTER } from "./constants/routes";
+import { ENTRIES, LOGIN, REGISTER } from "./constants/routes";
 
 // 1. Specify protected and public routes
 const protectedRoutes = ["/entries", "/reports"];
@@ -21,7 +20,7 @@ export default async function middleware(req: NextRequest) {
 	}
 
 	// For public routes, redirect to dashboard if refresh token is valid
-	if (isPublicRoute && refreshToken && !path.startsWith("/entries")) {
+	if (isPublicRoute && refreshToken && !path.startsWith(ENTRIES)) {
 		return NextResponse.redirect(new URL("/entries", req.nextUrl));
 	}
 

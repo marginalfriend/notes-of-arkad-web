@@ -37,15 +37,15 @@ export const POST = async (request: NextRequest) => {
 		}
 
 		if (validatedData.incomeExpense === "expense") {
-			const expenseCategory = prisma.expenseCategory.create({
+			const expenseCategory = await prisma.expenseCategory.create({
 				data: {
 					accountId: account.id,
 					title: validatedData.title,
 				}
 			})
 
-			console.log("Income category: ", expenseCategory)
-			return NextResponse.json({ incomeCategory: expenseCategory }, { status: 201 })
+			console.log("Expense category: ", expenseCategory)
+			return NextResponse.json({ expenseCategory: expenseCategory }, { status: 201 })
 		}
 	} catch (error) {
 		return handleError(error)

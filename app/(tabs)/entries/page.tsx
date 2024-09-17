@@ -12,6 +12,7 @@ const EntriesPage = async () => {
   });
   const data = await res.json();
   const { entries } = data;
+  console.log(entries);
   return (
     <main className="w-full min-h-full mb-20 p-4">
       <h1 className="text-2xl font-bold text-center">

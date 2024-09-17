@@ -24,10 +24,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { REGISTER } from "@/constants/routes";
+import { ENTRIES, REGISTER } from "@/constants/routes";
 
 const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  email: z.string().email(),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -42,7 +42,7 @@ const Login = () => {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -59,7 +59,7 @@ const Login = () => {
       if (response.ok) {
         const { accessToken } = await response.json();
         login(accessToken);
-        router.push("/dashboard");
+        router.push(ENTRIES);
         toast({
           title: "Login successful",
           description: "You have been logged in successfully.",
@@ -98,12 +98,12 @@ const Login = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="username"
+                name="email"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="username" />
+                      <Input {...field} placeholder="example@someweb.com" />
                     </FormControl>
                     {fieldState.error && (
                       <p className="text-red-500">{fieldState.error.message}</p>

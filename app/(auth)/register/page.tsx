@@ -23,7 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { FormProvider } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LOGIN } from "@/constants/routes";
+import { ENTRIES, LOGIN } from "@/constants/routes";
 
 type RegisterFormData = {
   email: string;
@@ -68,7 +68,7 @@ const Register = () => {
           description: "Registration successful",
         });
         login(result.token);
-        router.push("/dashboard");
+        router.push(ENTRIES);
       }
     } catch (error) {
       toast({
