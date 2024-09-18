@@ -13,9 +13,7 @@ export const handleError = (error: any) => {
 	}
 }
 
-export const getAccount = async (request: NextRequest) => {
-	const token = request.headers.get("Authorization");
-
+export const getAccount = async (token: string | null) => {
 	if (!token) return null
 
 	const payload = await verifyAccessToken(token)

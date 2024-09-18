@@ -10,7 +10,8 @@ const categorySchema = z.object({
 
 export const POST = async (request: NextRequest) => {
 	try {
-		const account = await getAccount(request);
+		const token = request.headers.get("Authorization");
+		const account = await getAccount(token);
 
 		if (!account) {
 			console.log("No account found!");
@@ -66,7 +67,8 @@ export const GET = async (request: NextRequest) => {
 		{ status: 400 }
 	)
 
-	const account = await getAccount(request)
+	const token = request.headers.get("Authorization");
+	const account = await getAccount(token);
 
 	if (!account) {
 		console.log("No account found!");

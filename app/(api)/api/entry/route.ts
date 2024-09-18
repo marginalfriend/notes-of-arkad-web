@@ -5,7 +5,8 @@ import { revalidatePath } from "next/cache";
 
 export const GET = async (request: NextRequest) => {
 	try {
-		const account = await getAccount(request)
+		const token = request.headers.get("Authorization");
+		const account = await getAccount(token);
 
 		if (!account) {
 			console.error("[ENTRY ENDPOINT] No account found!");

@@ -24,7 +24,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import NewEntryDialog from "@/app/(tabs)/entries/_components/new-entry-dialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -68,7 +67,6 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <NewEntryDialog />
       </div>
       <div className="rounded-md border">
         <Table>

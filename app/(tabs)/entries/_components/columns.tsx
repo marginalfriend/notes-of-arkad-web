@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ArrowUpDown } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 export type Entry = {
   id: string;
@@ -80,11 +81,7 @@ export const columns: ColumnDef<Entry>[] = [
         </Button>
       );
     },
-    cell: ({ row }) =>
-      row.original.amount.toLocaleString("id-ID", {
-        style: "currency",
-        currency: "IDR",
-      }),
+    cell: ({ row }) => formatCurrency(row.original.amount.toString()),
   },
   {
     accessorKey: "category.title",

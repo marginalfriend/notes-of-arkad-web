@@ -158,7 +158,7 @@ const NewEntryDialog = () => {
   return (
     <Dialog open={dialog} onOpenChange={setDialog}>
       <DialogTrigger asChild>
-        <Button className="gap-2 items-center justify-center">
+        <Button className="w-full rounded-b-none gap-2 items-center justify-center">
           <Plus className="w-4 h-4" />
           New Entry
         </Button>

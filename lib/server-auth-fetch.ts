@@ -1,8 +1,7 @@
 import { HOST } from '@/constants/routes';
-import { cookies } from 'next/headers'
 
-export const serverAuthFetch = async (url: string, options: RequestInit = {}) => {
-	const accessToken = await getAccessToken()
+export const serverAuthFetch = async (url: string, options: RequestInit = {}, cookies: { name: string, value: string }[]) => {
+	const accessToken = await getAccessToken(cookies)
 
 	if (accessToken) {
 		const headers = new Headers(options.headers);
@@ -17,15 +16,14 @@ export const serverAuthFetch = async (url: string, options: RequestInit = {}) =>
 	}
 }
 
-const getAccessToken = async () => {
-	const cookie = cookies();
-	const accToken = cookie.get('accessToken');
+const getAccessToken = async (cookies: { name: string, value: string }[]) => {
+	const accToken = cookies.find(cookie => cookie.name === "accessToken");
 
 	if (accToken) {
 		return accToken.value
 	}
 
-	const refToken = cookie.get('refreshToken');
+	const refToken = cookies.find(cookie => cookie.name === "refreshToken");
 
 	if (!refToken) {
 		return null;

@@ -17,7 +17,8 @@ export const POST = async (request: NextRequest) => {
 
 		const validatedData = entryRequestSchema.parse(entryRequest);
 
-		const account = await getAccount(request)
+		const token = request.headers.get("Authorization");
+		const account = await getAccount(token);
 
 		if (!account) {
 			console.log("No account found!");
