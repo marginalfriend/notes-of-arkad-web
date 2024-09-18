@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAccount, handleError } from "../utils";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 
 const entryRequestSchema = z.object({
 	amount: z.coerce.number({ message: "Invalid amount type" }).nonnegative({ message: "Number must be positive" }),
@@ -18,7 +18,7 @@ export const POST = async (request: NextRequest) => {
 
 		const validatedData = entryRequestSchema.parse(entryRequest);
 
-		const token = cookies().get("accessToken")?.value;
+		const token = headers().get("Authorization");
 		const account = await getAccount(token);
 
 		if (!account) {
