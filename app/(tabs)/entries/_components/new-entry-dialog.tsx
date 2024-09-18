@@ -71,8 +71,9 @@ const NewEntryDialog = () => {
     []
   );
   const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [dialog, setDialog] = useState(false);
   const [input, setInput] = useState("");
   const authFetch = useAuthFetch();
   const { toast } = useToast();
@@ -126,6 +127,7 @@ const NewEntryDialog = () => {
 
   const handleSubmit = async (values: z.infer<typeof newEntrySchema>) => {
     try {
+      setSubmitting(true);
       const res = await authFetch(`/api/${incomeExpense}`, {
         method: "POST",
         body: JSON.stringify(values),
@@ -137,8 +139,7 @@ const NewEntryDialog = () => {
       }
 
       form.reset();
-      revalidatePath("/entries", "page");
-      setOpenDialog(false);
+      setDialog(false);
     } catch (error) {
       console.log(error);
       toast({
@@ -146,11 +147,13 @@ const NewEntryDialog = () => {
         description: "There's an error while creating entry, please try again.",
         variant: "destructive",
       });
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+    <Dialog open={dialog} onOpenChange={setDialog}>
       <DialogTrigger asChild>
         <Button className="gap-2 items-center justify-center">
           <Plus className="w-4 h-4" />
@@ -354,7 +357,9 @@ const NewEntryDialog = () => {
               )}
             />
 
-            <Button type="submit">Create</Button>
+            <Button type="submit" disabled={submitting}>
+              Create
+            </Button>
           </form>
         </Form>
       </DialogContent>

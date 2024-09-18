@@ -58,7 +58,7 @@ export const toEntry = (income: IncomeExtended[], expense: ExpenseExtended[]) =>
 		description: e.description,
 	}))
 
-	return entries;
+	return entries.sort((a: any, b: any) => new Date(b.date) - new Date(a.date));
 }
 
 type Entry = {

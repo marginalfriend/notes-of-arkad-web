@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAccount, handleError } from "../utils";
+import { revalidatePath } from "next/cache";
 
 const entryRequestSchema = z.object({
 	amount: z.number({ message: "Invalid amount type" }).nonnegative({ message: "Number must be positive" }),
@@ -35,6 +36,8 @@ export const POST = async (request: NextRequest) => {
 			}
 		});
 		console.log("Response: ", data);
+
+		revalidatePath("/entries")
 
 		return NextResponse.json({ data }, { status: 201 })
 

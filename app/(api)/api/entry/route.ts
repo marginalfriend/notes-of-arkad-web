@@ -17,9 +17,6 @@ export const GET = async (request: NextRequest) => {
 					accountId: account.id
 				}
 			},
-			orderBy: {
-				date: "asc"
-			},
 			include: {
 				category: {
 					select: {
@@ -35,9 +32,6 @@ export const GET = async (request: NextRequest) => {
 				category: {
 					accountId: account.id
 				}
-			},
-			orderBy: {
-				date: "asc"
 			},
 			include: {
 				category: {

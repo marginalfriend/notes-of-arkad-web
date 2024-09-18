@@ -40,7 +40,7 @@ export const columns: ColumnDef<Entry>[] = [
       );
     },
     cell: ({ row }) =>
-      row.original.date.toLocaleDateString("en-US", {
+      new Date(row.original.date).toLocaleDateString("en-US", {
         day: "numeric",
         month: "short",
         year: "numeric",
@@ -87,7 +87,7 @@ export const columns: ColumnDef<Entry>[] = [
       }),
   },
   {
-    accessorKey: "category",
+    accessorKey: "category.title",
     header: ({ column }) => {
       return (
         <Button
