@@ -3,16 +3,17 @@ import { ENTRIES, LOGIN, REGISTER } from "./constants/routes";
 
 // 1. Specify protected and public routes
 const protectedRoutes = ["/entries", "/reports"];
-const publicRoutes = [LOGIN, REGISTER, "/"];
+const authRoutes = [LOGIN, REGISTER];
 
 export default async function middleware(req: NextRequest) {
 	// 2. Check if the current route is protected or public
 	const path = req.nextUrl.pathname;
 	const isProtectedRoute = protectedRoutes.includes(path);
-	const isPublicRoute = publicRoutes.includes(path);
+	const isAuthRoutes = authRoutes.includes(path);
 
 	// Check for the refresh token in cookies
 	const refreshToken = req.cookies.get("refreshToken")?.value;
+	console.log("[MIDDLEWARE] Refresh token: ", !refreshToken)
 
 	// For protected routes, redirect to login if no refresh token
 	if (isProtectedRoute && !refreshToken) {
@@ -20,7 +21,7 @@ export default async function middleware(req: NextRequest) {
 	}
 
 	// For public routes, redirect to dashboard if refresh token is valid
-	if (isPublicRoute && refreshToken && !path.startsWith(ENTRIES)) {
+	if (isAuthRoutes && refreshToken) {
 		return NextResponse.redirect(new URL("/entries", req.nextUrl));
 	}
 

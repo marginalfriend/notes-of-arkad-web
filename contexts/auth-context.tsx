@@ -96,6 +96,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const checkAuth = async () => {
       setIsLoading(true);
       const token = await getAccessToken();
+      console.log("[AUTH CONTEXT] Token: ", token);
       if (token) {
         try {
           const response = await fetch("/api/auth/me", {
@@ -119,7 +120,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         setUser(null);
         setIsAuthenticated(false);
-        router.push(LOGIN);
       }
       setIsLoading(false);
       setIsInitialized(true);
