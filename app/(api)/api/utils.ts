@@ -13,7 +13,7 @@ export const handleError = (error: any) => {
 	}
 }
 
-export const getAccount = async (token: string | null) => {
+export const getAccount = async (token: string | null | undefined) => {
 	if (!token) return null
 
 	const payload = await verifyAccessToken(token)

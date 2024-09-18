@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAccount, handleError, toEntry } from "../utils";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 export const GET = async (request: NextRequest) => {
 	try {
-		const token = request.headers.get("Authorization");
+		const token = cookies().get("accessToken")?.value;
 		const account = await getAccount(token);
 
 		if (!account) {
