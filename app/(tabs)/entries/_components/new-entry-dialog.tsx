@@ -160,208 +160,214 @@ const NewEntryDialog = () => {
           New Entry
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-auto">
-        <DialogHeader>
-          <DialogTitle>Create New Entry</DialogTitle>
+      <DialogContent className="h-[90vh] px-0">
+        <DialogHeader className="border-b pb-4">
+          <DialogTitle className="text-center">Create New Entry</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-4"
-          >
-            <FormField
-              control={form.control}
-              name="incomeExpense"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Income / Expense</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(e) => {
-                        field.onChange(e);
-                        handleIncomeExpenseChange(e);
-                      }}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Income / Expense" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="income">Income</SelectItem>
-                        <SelectItem value="expense">Expense</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormDescription>Money in or money out?</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <div className="flex flex-col pb-6 px-6 h-full w-full overflow-y-scroll">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="incomeExpense"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Income / Expense</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(e) => {
+                          field.onChange(e);
+                          handleIncomeExpenseChange(e);
+                        }}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Income / Expense" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="income">Income</SelectItem>
+                          <SelectItem value="expense">Expense</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormDescription>Money in or money out?</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="categoryId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <FormControl>
-                    <Popover open={open} onOpenChange={setOpen}>
+              <FormField
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <FormControl>
+                      <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            disabled={incomeExpense === undefined}
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className="w-full justify-between font-normal"
+                          >
+                            {field.value
+                              ? categories.find(
+                                  (category) => category.id === field.value
+                                )?.title
+                              : incomeExpense === undefined
+                              ? "Select income / expense first"
+                              : "Select category..."}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[464px] p-0">
+                          <Command>
+                            <CommandInput
+                              placeholder="Search or create category..."
+                              onValueChange={setInput}
+                            />
+                            <CommandList>
+                              <CommandEmpty>
+                                {categoriesLoading ? (
+                                  "Loading categories..."
+                                ) : input ? (
+                                  <Button
+                                    variant={"ghost"}
+                                    className="w-full"
+                                    onClick={handleCreateCategory}
+                                  >
+                                    {`Create "${input}"`}
+                                  </Button>
+                                ) : (
+                                  "No categories found"
+                                )}
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {categories.map((category) => (
+                                  <CommandItem
+                                    value={category.id}
+                                    key={category.id}
+                                    onSelect={() => {
+                                      form.setValue("categoryId", category.id);
+                                      setOpen(false);
+                                    }}
+                                  >
+                                    {category.title}
+                                    <CheckIcon
+                                      className={cn(
+                                        "ml-auto h-4 w-4",
+                                        category.id === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormDescription>
+                      Select your income / expense category
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="100000000" {...field} />
+                    </FormControl>
+                    <FormDescription>How much was it?</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Description{" "}
+                      <span className="text-muted-foreground">(optional)</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="With da bois"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>Give it a clue</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Date</FormLabel>
+                    <Popover>
                       <PopoverTrigger asChild>
-                        <Button
-                          disabled={incomeExpense === undefined}
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={open}
-                          className="w-full justify-between font-normal"
-                        >
-                          {field.value
-                            ? categories.find(
-                                (category) => category.id === field.value
-                              )?.title
-                            : incomeExpense === undefined
-                            ? "Select income / expense first"
-                            : "Select category..."}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-[464px] p-0">
-                        <Command>
-                          <CommandInput
-                            placeholder="Search or create category..."
-                            onValueChange={setInput}
-                          />
-                          <CommandList>
-                            <CommandEmpty>
-                              {categoriesLoading ? (
-                                "Loading categories..."
-                              ) : input ? (
-                                <Button
-                                  variant={"ghost"}
-                                  className="w-full"
-                                  onClick={handleCreateCategory}
-                                >
-                                  {`Create "${input}"`}
-                                </Button>
-                              ) : (
-                                "No categories found"
-                              )}
-                            </CommandEmpty>
-                            <CommandGroup>
-                              {categories.map((category) => (
-                                <CommandItem
-                                  value={category.id}
-                                  key={category.id}
-                                  onSelect={() => {
-                                    form.setValue("categoryId", category.id);
-                                    setOpen(false);
-                                  }}
-                                >
-                                  {category.title}
-                                  <CheckIcon
-                                    className={cn(
-                                      "ml-auto h-4 w-4",
-                                      category.id === field.value
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    )}
-                                  />
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
                       </PopoverContent>
                     </Popover>
-                  </FormControl>
-                  <FormDescription>
-                    Select your income / expense category
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormDescription>When was this happening?</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="amount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Amount</FormLabel>
-                  <FormControl>
-                    <Input type="number" placeholder="100000000" {...field} />
-                  </FormControl>
-                  <FormDescription>How much was it?</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Description{" "}
-                    <span className="text-muted-foreground">(optional)</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input type="text" placeholder="With da bois" {...field} />
-                  </FormControl>
-                  <FormDescription>Give it a clue</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormDescription>When was this happening?</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button type="submit" disabled={submitting}>
-              Create
-            </Button>
-          </form>
-        </Form>
+              <Button type="submit" disabled={submitting} className="w-full">
+                Create
+              </Button>
+            </form>
+          </Form>
+        </div>
       </DialogContent>
     </Dialog>
   );
