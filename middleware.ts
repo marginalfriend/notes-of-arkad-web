@@ -13,7 +13,6 @@ export default async function middleware(req: NextRequest) {
 
 	// Check for the refresh token in cookies
 	const refreshToken = req.cookies.get("refreshToken")?.value;
-	console.log("[MIDDLEWARE] Refresh token: ", !refreshToken)
 
 	// For protected routes, redirect to login if no refresh token
 	if (isProtectedRoute && !refreshToken) {

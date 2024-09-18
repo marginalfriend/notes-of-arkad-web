@@ -96,7 +96,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const checkAuth = async () => {
       setIsLoading(true);
       const token = await getAccessToken();
-      console.log("[AUTH CONTEXT] Token: ", token);
       if (token) {
         try {
           const response = await fetch("/api/auth/me", {

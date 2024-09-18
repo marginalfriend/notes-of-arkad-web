@@ -7,12 +7,12 @@ import { useRouter } from "next/navigation";
 import { ENTRIES } from "@/constants/routes";
 
 const GetStartedButton = () => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
 
   return (
-    <Button onClick={() => router.push(ENTRIES)}>
-      {user ? "Go to Entries" : "Get Started"}
+    <Button disabled={isLoading} onClick={() => router.push(ENTRIES)}>
+      {isLoading? "Please wait..." : user ? "Go to Entries" : "Get Started"}
     </Button>
   );
 };

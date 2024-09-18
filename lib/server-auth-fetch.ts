@@ -26,7 +26,7 @@ const getAccessToken = async () => {
 	}
 
 	const refToken = cookie.get('refreshToken');
-	console.log('[SERVER AUTH FETCH] Refresh token: ', refToken)
+	console.log('[SERVER AUTH FETCH] Refresh token: ', refToken?.value)
 
 	if (!refToken) {
 		console.log('[SERVER AUTH FETCH] No refresh token')

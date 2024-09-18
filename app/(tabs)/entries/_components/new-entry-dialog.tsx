@@ -116,7 +116,6 @@ const NewEntryDialog = () => {
           setOpen(false);
         });
     } catch (error) {
-      console.log(error);
       toast({
         title: "Error creating category",
         description:
@@ -141,7 +140,6 @@ const NewEntryDialog = () => {
       form.reset();
       setDialog(false);
     } catch (error) {
-      console.log(error);
       toast({
         title: "Error creating entry",
         description: "There's an error while creating entry, please try again.",

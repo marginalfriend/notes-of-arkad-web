@@ -40,8 +40,8 @@ const RegisterForm = () => {
   const router = useRouter();
 
   const onSubmit = async (data: RegisterFormData) => {
-    setIsLoading(true);
     try {
+      setIsLoading(true);
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -67,7 +67,7 @@ const RegisterForm = () => {
           title: "Success",
           description: "Registration successful",
         });
-        login(result.token);
+        login(result.accessToken);
         router.push(ENTRIES);
       }
     } catch (error) {
@@ -76,7 +76,6 @@ const RegisterForm = () => {
         description: "An unexpected error occurred",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -95,6 +94,7 @@ const RegisterForm = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               name="email"
+              defaultValue=""
               control={form.control}
               rules={{
                 required: "Email is required",
@@ -108,7 +108,7 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="username" />
+                    <Input {...field} placeholder="example@website.com" />
                   </FormControl>
                   {fieldState.error && (
                     <p className="text-red-500">{fieldState.error.message}</p>
@@ -118,6 +118,7 @@ const RegisterForm = () => {
             />
             <FormField
               name="username"
+              defaultValue=""
               control={form.control}
               rules={{
                 required: "Username is required",
@@ -144,6 +145,7 @@ const RegisterForm = () => {
             />
             <FormField
               name="password"
+              defaultValue=""
               control={form.control}
               rules={{
                 required: "Password is required",
@@ -170,6 +172,7 @@ const RegisterForm = () => {
             />
             <FormField
               name="confirmPassword"
+              defaultValue=""
               control={form.control}
               rules={{
                 required: "Confirm Password is required",
