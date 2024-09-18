@@ -1,3 +1,4 @@
+import { PROD_HOST } from '@/constants/routes';
 import { cookies } from 'next/headers'
 
 export const serverAuthFetch = async (url: string, options: RequestInit = {}) => {
@@ -33,7 +34,7 @@ const getAccessToken = async () => {
 		return null;
 	}
 
-	const res = await fetch('http://localhost:3000/api/auth/refresh', {
+	const res = await fetch(`${PROD_HOST}/api/auth/refresh`, {
 		method: "POST",
 		headers: {
 			'Cookie': `refreshToken=${refToken.value}` // Manually include the refresh token
