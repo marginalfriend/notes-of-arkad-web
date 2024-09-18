@@ -1,4 +1,4 @@
-import { PROD_HOST } from '@/constants/routes';
+import { HOST } from '@/constants/routes';
 import { cookies } from 'next/headers'
 
 export const serverAuthFetch = async (url: string, options: RequestInit = {}) => {
@@ -20,21 +20,18 @@ export const serverAuthFetch = async (url: string, options: RequestInit = {}) =>
 const getAccessToken = async () => {
 	const cookie = cookies();
 	const accToken = cookie.get('accessToken');
-	console.log('[SERVER AUTH FETCH] Access token: ', accToken)
 
 	if (accToken) {
 		return accToken.value
 	}
 
 	const refToken = cookie.get('refreshToken');
-	console.log('[SERVER AUTH FETCH] Refresh token: ', refToken?.value)
 
 	if (!refToken) {
-		console.log('[SERVER AUTH FETCH] No refresh token')
 		return null;
 	}
 
-	const res = await fetch(`${PROD_HOST}/api/auth/refresh`, {
+	const res = await fetch(`${HOST}/api/auth/refresh`, {
 		method: "POST",
 		headers: {
 			'Cookie': `refreshToken=${refToken.value}` // Manually include the refresh token

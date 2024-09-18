@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAccount, handleError, toEntry } from "../utils";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export const GET = async (request: NextRequest) => {
 	try {
 		const account = await getAccount(request)
 
 		if (!account) {
-			console.log("No account found!");
+			console.error("[ENTRY ENDPOINT] No account found!");
 			return NextResponse.json({ error: "Account not found" }, { status: 401 });
 		}
 
@@ -44,6 +45,8 @@ export const GET = async (request: NextRequest) => {
 		});
 
 		const entries = toEntry(income, expense)
+
+		revalidatePath('/entries')
 
 		return NextResponse.json({ entries }, { status: 200, statusText: "OK" })
 	} catch (error) {

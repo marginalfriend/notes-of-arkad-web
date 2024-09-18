@@ -1,7 +1,7 @@
 "use client";
 
 import { z } from "zod";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency, parseCurrency } from "@/lib/utils";
 import { format } from "date-fns";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -61,7 +61,12 @@ import { useToast } from "@/hooks/use-toast";
 const newEntrySchema = z.object({
   date: z.coerce.date(),
   incomeExpense: z.enum(["income", "expense"]),
-  amount: z.coerce.number().nonnegative(),
+  amount: z
+    .string()
+    .min(1, "Amount is required")
+    .refine((value) => !isNaN(Number(value.replace(/,/g, ""))), {
+      message: "Amount must be a valid number",
+    }),
   description: z.optional(z.coerce.string()),
   categoryId: z.string(),
 });
@@ -287,7 +292,15 @@ const NewEntryDialog = () => {
                   <FormItem>
                     <FormLabel>Amount</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="100000000" {...field} />
+                      <Input
+                        value={formatCurrency(field.value)}
+                        onChange={(e) => {
+                          const rawValue = parseCurrency(e.target.value);
+                          field.onChange(rawValue);
+                        }}
+                        type="text"
+                        placeholder="1,000,000"
+                      />
                     </FormControl>
                     <FormDescription>How much was it?</FormDescription>
                     <FormMessage />
