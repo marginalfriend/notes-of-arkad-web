@@ -22,6 +22,7 @@ export function Footer() {
         </Link>
         <Link href={REPORTS} className="w-full">
           <Button
+            disabled
             variant={pathname === REPORTS ? "default" : "outline"}
             className="w-full rounded-b-none"
           >
