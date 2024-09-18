@@ -14,7 +14,9 @@ export const handleError = (error: any) => {
 }
 
 export const getAccount = async (request: NextRequest) => {
-	const token = request.headers.get("Authorization") as string;
+	const token = request.headers.get("Authorization");
+
+	if (!token) return null
 
 	const payload = await verifyAccessToken(token)
 
@@ -58,7 +60,7 @@ export const toEntry = (income: IncomeExtended[], expense: ExpenseExtended[]) =>
 		description: e.description,
 	}))
 
-	return entries.sort((a: any, b: any) => new Date(b.date) - new Date(a.date));
+	return entries.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 type Entry = {

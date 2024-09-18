@@ -130,7 +130,7 @@ const LoginForm = () => {
       </CardContent>
       <CardFooter>
         <p className="text-sm text-gray-500">
-          Don't have an account?{" "}
+          Don{"'"}t have an account?{" "}
           <Link href={REGISTER}>
             <span className="text-blue-400 hover:underline">Register here</span>
           </Link>
