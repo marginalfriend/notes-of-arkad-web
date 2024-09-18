@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
 	const refreshToken = request.cookies.get("refreshToken")?.value;
+	console.log('[REFRESH ENDPOINT] Refresh token: ', refreshToken)
 
 	if (!refreshToken) {
 		return NextResponse.json({ error: "No refresh token" }, { status: 401 });
@@ -32,6 +33,7 @@ export async function POST(request: NextRequest) {
 	});
 
 	const response = NextResponse.json({ accessToken });
+
 	response.cookies.set("refreshToken", newRefreshToken, {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",

@@ -2,15 +2,11 @@ import { DataTable } from "@/components/ui/data-table";
 import React from "react";
 import { columns } from "./_components/columns";
 import { cookies } from "next/headers";
+import { serverAuthFetch } from "@/lib/server-auth-fetch";
 
 const EntriesPage = async () => {
-  const accessToken = cookies().get("accessToken")?.value as string;
-  const res = await fetch("http://localhost:3000/api/entry", {
-    headers: {
-      Authorization: accessToken,
-    },
-  });
-  const data = await res.json();
+	const res = await serverAuthFetch('http://localhost:3000/api/entry')
+  const data = await res?.json();
   const { entries } = data;
   console.log(entries);
   return (
