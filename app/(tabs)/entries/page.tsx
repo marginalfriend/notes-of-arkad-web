@@ -1,11 +1,11 @@
 import { DataTable } from "@/components/ui/data-table";
 import React from "react";
 import { columns } from "./_components/columns";
-import { cookies } from "next/headers";
 import { serverAuthFetch } from "@/lib/server-auth-fetch";
+import { PROD_HOST } from "@/constants/routes";
 
 const EntriesPage = async () => {
-	const res = await serverAuthFetch('http://localhost:3000/api/entry')
+	const res = await serverAuthFetch(`${PROD_HOST}/api/entry`)
   const data = await res?.json();
   const { entries } = data;
 

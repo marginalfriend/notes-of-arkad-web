@@ -22,6 +22,7 @@ CREATE TABLE "IncomeCategory" (
 -- CreateTable
 CREATE TABLE "Income" (
     "id" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
     "amount" DOUBLE PRECISION NOT NULL,
     "description" TEXT,
     "categoryId" TEXT NOT NULL,
@@ -41,6 +42,7 @@ CREATE TABLE "ExpenseCategory" (
 -- CreateTable
 CREATE TABLE "Expense" (
     "id" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
     "amount" DOUBLE PRECISION NOT NULL,
     "description" TEXT,
     "categoryId" TEXT NOT NULL,
@@ -50,15 +52,6 @@ CREATE TABLE "Expense" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Account_email_key" ON "Account"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Account_username_key" ON "Account"("username");
-
--- CreateIndex
-CREATE UNIQUE INDEX "IncomeCategory_title_key" ON "IncomeCategory"("title");
-
--- CreateIndex
-CREATE UNIQUE INDEX "ExpenseCategory_title_key" ON "ExpenseCategory"("title");
 
 -- AddForeignKey
 ALTER TABLE "IncomeCategory" ADD CONSTRAINT "IncomeCategory_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
