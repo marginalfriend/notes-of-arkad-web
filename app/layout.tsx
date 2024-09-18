@@ -6,7 +6,7 @@ import { AuthProvider } from "@/contexts/auth-context";
 const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Notes of Arkad",
+  title: "Arkad",
   description: "Personal finance and budgeting app",
 };
 
