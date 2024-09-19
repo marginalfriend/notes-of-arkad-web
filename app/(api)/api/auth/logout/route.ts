@@ -1,3 +1,4 @@
+import 'server-only'
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 

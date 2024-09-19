@@ -1,3 +1,4 @@
+import 'server-only'
 import { NextRequest, NextResponse } from "next/server";
 import { verifyRefreshToken, generateTokens } from "@/lib/auth";
 import prisma from "@/lib/prisma";

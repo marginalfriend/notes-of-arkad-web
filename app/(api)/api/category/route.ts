@@ -1,3 +1,4 @@
+import 'server-only'
 import { NextRequest, NextResponse } from "next/server";
 import { getAccount, handleError } from "../utils";
 import { z } from "zod";

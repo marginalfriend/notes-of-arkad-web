@@ -1,3 +1,4 @@
+import 'server-only'
 import { NextResponse } from "next/server";
 import { compare } from "bcrypt";
 import prisma from "@/lib/prisma";

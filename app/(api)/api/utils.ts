@@ -1,7 +1,8 @@
+import 'server-only'
 import { verifyAccessToken } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { Expense, Income } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 export const handleError = (error: any) => {
