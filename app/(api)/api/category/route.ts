@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAccount, handleError } from "../utils";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 
 const categorySchema = z.object({
 	title: z.string(),
@@ -12,7 +12,7 @@ const categorySchema = z.object({
 
 export const POST = async (request: NextRequest) => {
 	try {
-		const token = cookies().get("accessToken")?.value;
+		const token = headers().get("Authorization");
 		const account = await getAccount(token);
 
 		if (!account) {
@@ -69,7 +69,7 @@ export const GET = async (request: NextRequest) => {
 		{ status: 400 }
 	)
 
-	const token = cookies().get("accessToken")?.value;
+	const token = headers().get("Authorization");
 	const account = await getAccount(token);
 
 	if (!account) {
