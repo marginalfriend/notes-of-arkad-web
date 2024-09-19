@@ -5,7 +5,7 @@ import { cn, formatCurrency, parseCurrency } from "@/lib/utils";
 import { format } from "date-fns";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthFetch } from "@/hooks/use-auth-fetch";
@@ -55,12 +55,11 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { CalendarIcon, CheckIcon } from "@radix-ui/react-icons";
-import { revalidatePath } from "next/cache";
 import { useToast } from "@/hooks/use-toast";
 
 const newEntrySchema = z.object({
   date: z.coerce.date(),
-  incomeExpense: z.enum(["income", "expense"]),
+  incomeExpense: z.enum(["income", "expense", ""]),
   amount: z
     .string()
     .min(1, "Amount is required")
@@ -71,7 +70,17 @@ const newEntrySchema = z.object({
   categoryId: z.string(),
 });
 
-const NewEntryDialog = () => {
+type EntrySchema = z.infer<typeof newEntrySchema> & { id: string };
+const keys = newEntrySchema.keyof();
+type EntrySchemaKey = z.infer<typeof keys>;
+
+const EntryDialog = ({
+  trigger,
+  entry,
+}: {
+  trigger: ReactNode;
+  entry?: EntrySchema;
+}) => {
   const [categories, setCategories] = useState<{ id: string; title: string }[]>(
     []
   );
@@ -86,10 +95,14 @@ const NewEntryDialog = () => {
   const form = useForm<z.infer<typeof newEntrySchema>>({
     resolver: zodResolver(newEntrySchema),
     defaultValues: {
-      date: new Date(),
+      amount: "",
       categoryId: "",
+      incomeExpense: "",
+      date: new Date(),
+      description: "",
     },
   });
+
   const incomeExpense = form.getValues().incomeExpense;
 
   const handleIncomeExpenseChange = (e: string) => {
@@ -133,7 +146,7 @@ const NewEntryDialog = () => {
     try {
       setSubmitting(true);
       const res = await authFetch(`/api/${incomeExpense}`, {
-        method: "POST",
+        method: entry ? "PUT" : "POST",
         body: JSON.stringify(values),
       });
 
@@ -155,17 +168,25 @@ const NewEntryDialog = () => {
     }
   };
 
+  useEffect(() => {
+    if (dialog && entry) {
+      form.control._disableForm(true);
+      handleIncomeExpenseChange(entry.incomeExpense);
+      for (const value in form.getValues()) {
+        form.setValue(value as EntrySchemaKey, entry[value as EntrySchemaKey]);
+      }
+      form.control._disableForm(false);
+    }
+  }, [entry, form, dialog]);
+
   return (
     <Dialog open={dialog} onOpenChange={setDialog}>
-      <DialogTrigger asChild>
-        <Button className="w-full rounded-b-none gap-2 items-center justify-center">
-          <Plus className="w-4 h-4" />
-          New Entry
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="h-[90vh] px-0">
         <DialogHeader className="border-b pb-4">
-          <DialogTitle className="text-center">Create New Entry</DialogTitle>
+          <DialogTitle className="text-center">
+            {entry ? "Update Entry" : "Create New Entry"}
+          </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col pb-6 px-6 h-full w-full overflow-y-scroll">
           <Form {...form}>
@@ -384,4 +405,4 @@ const NewEntryDialog = () => {
   );
 };
 
-export default NewEntryDialog;
+export default EntryDialog;

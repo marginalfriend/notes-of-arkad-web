@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ENTRIES, REPORTS } from "@/constants/routes";
 import { useAuth } from "@/hooks/use-auth";
-import { ArrowLeftFromLineIcon } from "lucide-react";
+import { ArrowLeftFromLineIcon, Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import NewEntryDialog from "../entries/_components/new-entry-dialog";
+import EntryDialog from "../entries/_components/entry-dialog";
 
 export function Footer() {
   const pathname = usePathname();
@@ -25,7 +25,14 @@ export function Footer() {
         </Button>
       </div>
       <div className="bg-white/30 backdrop-blur-md gap-2 items-center col-span-1">
-        <NewEntryDialog />
+        <EntryDialog
+          trigger={
+            <Button className="w-full rounded-b-none gap-2 items-center justify-center">
+              <Plus className="w-4 h-4" />
+              New Entry
+            </Button>
+          }
+        />
       </div>
       <div className="col-span-1"></div>
     </footer>

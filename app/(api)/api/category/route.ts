@@ -16,12 +16,11 @@ export const POST = async (request: NextRequest) => {
 		const account = await getAccount(token);
 
 		if (!account) {
-			console.log("No account found!");
+			console.log("[CATEGORY ENDPOINT] No account found!");
 			return NextResponse.json({ error: "Account not found" }, { status: 401 });
 		}
 
 		const validatedData = categorySchema.parse(await request.json());
-		console.log("Validated request: ", validatedData);
 
 		if (validatedData.incomeExpense === "income") {
 			const incomeCategory = await prisma.incomeCategory.create({
@@ -35,7 +34,6 @@ export const POST = async (request: NextRequest) => {
 				}
 			})
 
-			console.log("Income category: ", incomeCategory)
 			return NextResponse.json({ incomeCategory }, { status: 201 })
 		}
 
@@ -47,7 +45,6 @@ export const POST = async (request: NextRequest) => {
 				}
 			})
 
-			console.log("Expense category: ", expenseCategory)
 			return NextResponse.json({ expenseCategory: expenseCategory }, { status: 201 })
 		}
 	} catch (error) {
@@ -57,7 +54,6 @@ export const POST = async (request: NextRequest) => {
 
 export const GET = async (request: NextRequest) => {
 	const incomeExpense = request.nextUrl.searchParams.get("incomeExpense");
-	console.log("[api/category | GET] Income/Expense: ", incomeExpense)
 
 	if (!incomeExpense) return NextResponse.json(
 		{ error: "Income / Expense must be defined in the search param e.g. api/category?incomeExpense=income" },
@@ -73,7 +69,7 @@ export const GET = async (request: NextRequest) => {
 	const account = await getAccount(token);
 
 	if (!account) {
-		console.log("No account found!");
+		console.log("[CATEGORY ENDPOINT] No account found!");
 		return NextResponse.json({ error: "Account not found" }, { status: 401 });
 	}
 
@@ -84,7 +80,6 @@ export const GET = async (request: NextRequest) => {
 			}
 		})
 
-		console.log("Income category: ", incomeCategory)
 		return NextResponse.json({ incomeCategory }, { status: 200 })
 	}
 
@@ -95,7 +90,6 @@ export const GET = async (request: NextRequest) => {
 			}
 		})
 
-		console.log("Expense category: ", expenseCategory)
 		return NextResponse.json({ expenseCategory }, { status: 200 })
 	}
 }
