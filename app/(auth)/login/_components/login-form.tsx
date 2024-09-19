@@ -70,9 +70,9 @@ const LoginForm = () => {
           description: "Invalid username or password.",
           variant: "destructive",
         });
+				throw new Error("Login failed: Invalid email or password")
       }
     } catch (error) {
-      console.error("Login error:", error);
       toast({
         title: "Login error",
         description: "An error occurred during login. Please try again.",
