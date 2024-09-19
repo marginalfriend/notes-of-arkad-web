@@ -1,6 +1,6 @@
 import { HOST } from '@/constants/routes';
 
-export const serverAuthFetch = async (url: string, options: RequestInit = {}, cookies: { name: string, value: string }[]) => {
+export const serverAuthFetch = async (url: string, cookies: { name: string, value: string }[], options: RequestInit = {}) => {
 	const accessToken = await getAccessToken(cookies)
 
 	if (accessToken) {
