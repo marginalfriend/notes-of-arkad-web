@@ -20,7 +20,9 @@ export default EntriesPage;
 
 const TableSection = async () => {
   const cookiesStore = cookies().getAll();
-  const res = await serverAuthFetch(`${HOST}/api/entry`, cookiesStore);
+  const res = await serverAuthFetch(`${HOST}/api/entry`, cookiesStore, {
+    next: { tags: ["entries"] },
+  });
   const data = await res?.json();
   const { entries } = data;
 

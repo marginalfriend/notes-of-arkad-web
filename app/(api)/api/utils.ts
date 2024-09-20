@@ -7,6 +7,7 @@ import { ZodError } from "zod";
 
 export const handleError = (error: any) => {
 	if (error instanceof ZodError) {
+		console.log("[BACKEND ERROR HANDLER] Invalid input(s): ", error)
 		return NextResponse.json({ error: error.issues }, { status: 400, statusText: "Bad Request: Invalid input(s)" })
 	} else {
 		console.log("[BACKEND ERROR HANDLER] Inernal server error: ", error)

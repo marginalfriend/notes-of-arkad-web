@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAccount, handleError } from "../utils";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 
 const createIncomeSchema = z.object({
@@ -39,7 +39,7 @@ export const POST = async (request: NextRequest) => {
 			}
 		});
 
-		revalidatePath("/(tabs)/entries", "page")
+		revalidateTag("entries")
 
 		return NextResponse.json({ data }, { status: 201 })
 

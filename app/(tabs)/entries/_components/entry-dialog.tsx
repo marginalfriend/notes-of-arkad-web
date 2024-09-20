@@ -147,7 +147,7 @@ const EntryDialog = ({
       setSubmitting(true);
       const res = await authFetch(`/api/${incomeExpense}`, {
         method: entry ? "PUT" : "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify(entry ? { id: entry.id, ...values } : values),
       });
 
       if (!res.ok) {

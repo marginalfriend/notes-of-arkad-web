@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAccount, handleError } from "../utils";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 
 const createExpenseSchema = z.object({
@@ -27,7 +27,6 @@ export const POST = async (request: NextRequest) => {
 		const account = await getAccount(token);
 
 		if (!account) {
-			console.log("No account found!");
 			return NextResponse.json({ error: "Account not found" }, { status: 401 });
 		}
 
@@ -45,7 +44,6 @@ export const POST = async (request: NextRequest) => {
 		return NextResponse.json({ data }, { status: 201 })
 
 	} catch (error: any) {
-		console.log("[EXPENSE ENDPOINT] Error: ", error)
 		return handleError(error)
 	}
 }
@@ -75,7 +73,7 @@ export const PUT = async (request: NextRequest) => {
 			}
 		});
 
-		revalidatePath("/(tabs)/entries", "page")
+		revalidateTag("entries")
 
 		return NextResponse.json({ data }, { status: 200 })
 
