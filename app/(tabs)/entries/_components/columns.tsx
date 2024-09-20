@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { formatCurrency, parseCurrency } from "@/lib/utils";
 import EntryDialog from "./entry-dialog";
+import DeleteButton from "./delete-button";
 
 export type Entry = {
   id: string;
@@ -149,9 +150,10 @@ export const columns: ColumnDef<Entry>[] = [
               </Button>
             }
           />
-          {/* <Button className="w-9 p-2" variant={"destructive"}>
-            <Trash2 className="w-4 h-4" />
-          </Button> */}
+          <DeleteButton
+            id={row.original.id}
+            incomeExpense={row.original.incomeExpense}
+          />
         </div>
       );
     },

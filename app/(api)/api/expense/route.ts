@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAccount, handleError } from "../utils";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 const createExpenseSchema = z.object({
@@ -73,11 +73,39 @@ export const PUT = async (request: NextRequest) => {
 			}
 		});
 
-		revalidateTag("entries")
+		revalidatePath("/(tabs)/entries", "page")
 
 		return NextResponse.json({ data }, { status: 200 })
 
 	} catch (error) {
 		return handleError(error)
+	}
+}
+
+export const DELETE = async (request: NextRequest) => {
+	try {
+		const token = headers().get("Authorization");
+		const account = await getAccount(token);
+
+		if (!account) {
+			return NextResponse.json({ error: "Account not found" }, { status: 401 });
+		}
+
+		const req: { id: string } = await request.json()
+
+		const id = req.id
+
+		await prisma.expense.delete({
+			where: {
+				id
+			}
+		})
+
+		revalidatePath("/(tabs)/entries", "page")
+
+		return NextResponse.json({}, { status: 200 })
+
+	} catch (error) {
+		handleError(error)
 	}
 }
