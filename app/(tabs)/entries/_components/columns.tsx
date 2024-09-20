@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -140,7 +140,7 @@ export const columns: ColumnDef<Entry>[] = [
       };
 
       return (
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-center">
           <EntryDialog
             entry={entry}
             trigger={
@@ -149,9 +149,9 @@ export const columns: ColumnDef<Entry>[] = [
               </Button>
             }
           />
-          <Button className="w-9 p-2" variant={"destructive"}>
+          {/* <Button className="w-9 p-2" variant={"destructive"}>
             <Trash2 className="w-4 h-4" />
-          </Button>
+          </Button> */}
         </div>
       );
     },
