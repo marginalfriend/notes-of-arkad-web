@@ -1,6 +1,4 @@
-import { Entry } from "./_components/columns";
-
-export const entries: Entry[] = [
+export const entries = [
 	{
 		id: "entry_8709",
 		date: new Date("2023-11-19"),
