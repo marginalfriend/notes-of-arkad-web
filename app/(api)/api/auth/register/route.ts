@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { hash } from "bcrypt";
 import prisma from "@/lib/prisma";
 import { generateTokens } from "@/lib/auth";
+import { revalidatePath } from 'next/cache';
 
 export async function POST(request: Request) {
 	const { email, username, password } = await request.json();
@@ -47,6 +48,8 @@ export async function POST(request: Request) {
 		maxAge: 60 * 60, // 1 hour
 		path: "/",
 	})
+
+	revalidatePath("/register")
 
 	return response;
 }

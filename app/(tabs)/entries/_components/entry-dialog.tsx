@@ -186,7 +186,7 @@ const EntryDialog = ({
       <DialogContent className="h-[90vh] px-0">
         <DialogHeader className="border-b pb-4">
           <DialogTitle className="text-center">
-            {entry ? "Update Entry" : "Create New Entry"}
+            {entry ? "Update Entry" : "Add Entry"}
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col pb-6 px-6 h-full w-full overflow-y-scroll">
@@ -396,7 +396,7 @@ const EntryDialog = ({
               />
 
               <Button type="submit" disabled={submitting} className="w-full">
-                Create
+                {entry ? "Update" : "Add"}
               </Button>
             </form>
           </Form>
