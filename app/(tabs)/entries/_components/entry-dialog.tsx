@@ -177,6 +177,7 @@ const EntryDialog = ({
       }
       form.control._disableForm(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry, form, dialog]);
 
   return (
