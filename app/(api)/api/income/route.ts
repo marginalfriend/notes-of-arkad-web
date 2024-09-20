@@ -39,7 +39,7 @@ export const POST = async (request: NextRequest) => {
 			}
 		});
 
-		revalidateTag("entries")
+		revalidatePath("/(tabs)/entries", "page")
 
 		return NextResponse.json({ data }, { status: 201 })
 
@@ -79,5 +79,33 @@ export const PUT = async (request: NextRequest) => {
 
 	} catch (error) {
 		return handleError(error)
+	}
+}
+
+export const DELETE = async (request: NextRequest) => {
+	try {
+		const token = headers().get("Authorization");
+		const account = await getAccount(token);
+
+		if (!account) {
+			return NextResponse.json({ error: "Account not found" }, { status: 401 });
+		}
+
+		const req: { id: string } = await request.json()
+
+		const id = req.id
+
+		await prisma.income.delete({
+			where: {
+				id
+			}
+		})
+
+		revalidatePath("/(tabs)/entries", "page")
+
+		return NextResponse.json({}, { status: 200 })
+
+	} catch (error) {
+		handleError(error)
 	}
 }
