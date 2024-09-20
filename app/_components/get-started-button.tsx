@@ -11,7 +11,7 @@ const GetStartedButton = () => {
   const router = useRouter();
 
   return (
-    <Button disabled={isLoading} onClick={() => router.push(ENTRIES)}>
+    <Button disabled={isLoading} onClick={() => router.push(ENTRIES)} className="z-10">
       {isLoading? "Please wait..." : user ? "Go to Entries" : "Get Started"}
     </Button>
   );
