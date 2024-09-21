@@ -39,7 +39,7 @@ export const POST = async (request: NextRequest) => {
 			}
 		});
 
-		const response = NextResponse.json({ data }, { status: 201 })
+		const response = NextResponse.json({ data, revalidated: true }, { status: 201 })
 
 		revalidateTag("entries")
 

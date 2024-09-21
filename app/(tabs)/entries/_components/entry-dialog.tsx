@@ -59,7 +59,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const newEntrySchema = z.object({
   date: z.coerce.date(),
-  incomeExpense: z.enum(["income", "expense", ""]),
+  incomeExpense: z.enum(["income", "expense"]),
   amount: z
     .string()
     .min(1, "Amount is required")
@@ -97,7 +97,6 @@ const EntryDialog = ({
     defaultValues: {
       amount: "",
       categoryId: "",
-      incomeExpense: "",
       date: new Date(),
       description: "",
     },

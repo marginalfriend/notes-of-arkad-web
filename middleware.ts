@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ENTRIES, LOGIN, REGISTER } from "./constants/routes";
-import { verifyRefreshToken } from "./lib/auth";
+import { LOGIN, REGISTER } from "./constants/routes";
 
 // 1. Specify protected and public routes
 const protectedRoutes = ["/entries", "/reports"];

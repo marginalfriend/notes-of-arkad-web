@@ -1,5 +1,5 @@
 import 'server-only'
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getAccount, handleError, toEntry } from "../utils";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
