@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAccount, handleError } from "../utils";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 
 const createExpenseSchema = z.object({
@@ -39,7 +39,7 @@ export const POST = async (request: NextRequest) => {
 			}
 		});
 
-		const response = NextResponse.json({ data }, { status: 201 })
+		const response = NextResponse.json({ data, revalidated: true }, { status: 201 })
 
 		revalidateTag("entries")
 

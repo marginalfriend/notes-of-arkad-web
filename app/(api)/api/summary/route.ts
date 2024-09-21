@@ -116,13 +116,13 @@ export const GET = async () => {
 			}
 		}
 
-		const response = NextResponse.json({ data }, { status: 200 })
+		const response = NextResponse.json({ data, revalidated: true }, { status: 200 })
 
 		revalidateTag("summary")
 
 		return response
 
 	} catch (error) {
-		handleError(error)
+		return handleError(error)
 	}
 }

@@ -24,6 +24,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useEffect } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -53,6 +54,10 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return (
     <div className="space-y-4">

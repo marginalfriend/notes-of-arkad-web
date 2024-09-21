@@ -49,8 +49,6 @@ export const GET = async () => {
 
 		const entries = toEntry(income, expense)
 
-		revalidatePath('/entries')
-
 		return NextResponse.json({ entries }, { status: 200, statusText: "OK" })
 	} catch (error) {
 		return handleError(error)
