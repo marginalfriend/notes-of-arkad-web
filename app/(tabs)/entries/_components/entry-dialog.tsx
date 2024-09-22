@@ -100,11 +100,11 @@ const EntryDialog = ({
 
   const incomeExpense = form.getValues().incomeExpense;
 
-  const handleIncomeExpenseChange = (e: string) => {
+  const handleIncomeExpenseChange = async (e: string) => {
     setCategoriesLoading(true);
-    authFetch(`/api/category?incomeExpense=${e}`)
-      .then((res) => res.json())
-      .then((data) => setCategories(data[`${e}Category`]));
+    const res = await authFetch(`/api/category?incomeExpense=${e}`);
+    const data = await res.json();
+    setCategories(data[`${e}Category`]);
     form.setValue("categoryId", "");
     setCategoriesLoading(false);
   };
@@ -152,14 +152,14 @@ const EntryDialog = ({
 
       res.json().then((data) => {
         if (entry) {
-          updateEntry(data);
+          updateEntry(data.entry);
         } else {
-          addEntry(data);
+          addEntry(data.entry);
         }
       });
 
-      form.reset();
       setDialog(false);
+      form.reset();
     } catch (error) {
       toast({
         title: "Error creating entry",
@@ -173,15 +173,17 @@ const EntryDialog = ({
 
   useEffect(() => {
     if (dialog && entry) {
-      form.control._disableForm(true);
-      handleIncomeExpenseChange(entry.incomeExpense);
-      for (const value in form.getValues()) {
-        form.setValue(value as EntrySchemaKey, entry[value as EntrySchemaKey]);
-      }
-      form.control._disableForm(false);
+      handleIncomeExpenseChange(entry.incomeExpense).then(() => {
+        for (const value in form.getValues()) {
+          form.setValue(
+            value as EntrySchemaKey,
+            entry[value as EntrySchemaKey]
+          );
+        }
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entry, form, dialog]);
+  }, [entry, dialog]);
 
   return (
     <Dialog open={dialog} onOpenChange={setDialog}>
@@ -207,12 +209,14 @@ const EntryDialog = ({
                     <FormControl>
                       <Select
                         onValueChange={(e) => {
-                          field.onChange(e);
-                          handleIncomeExpenseChange(e);
+                          if (!!e) {
+                            field.onChange(e);
+                            handleIncomeExpenseChange(e);
+                          }
                         }}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger disabled={!!entry}>
                           <SelectValue placeholder="Income / Expense" />
                         </SelectTrigger>
                         <SelectContent>
