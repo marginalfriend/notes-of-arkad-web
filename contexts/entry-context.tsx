@@ -41,7 +41,8 @@ export type EntryContextProps = {
   addEntry: (entry: Entry) => void;
   updateEntry: (entry: Entry) => void;
   deleteEntry: (id: string) => void;
-  isLoading: { summary: boolean; entry: boolean };
+  summaryLoading: boolean;
+  entryLoading: boolean;
 };
 
 export const EntryContext = createContext<EntryContextProps | undefined>(
@@ -51,7 +52,8 @@ export const EntryContext = createContext<EntryContextProps | undefined>(
 export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [summary, setSummary] = useState<SummaryData>(defaultSummaryData);
-  const [isLoading, setIsLoading] = useState({ entry: true, summary: true });
+  const [entryLoading, setEntryLoading] = useState(true);
+  const [summaryLoading, setSummaryLoading] = useState(true);
   const authFetch = useAuthFetch();
   const { toast } = useToast();
 
@@ -90,7 +92,7 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
         .then((res) => res.json())
         .then((data) => setEntries(data.entries))
         .then(() => {
-          setIsLoading({ summary: isLoading.summary, entry: false });
+          setEntryLoading(false);
         });
     } catch (error) {
       handleError(error);
@@ -103,7 +105,7 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
         .then((res: Response) => res.json())
         .then((data: any) => setSummary(data.data))
         .then(() => {
-          setIsLoading({ summary: false, entry: isLoading.entry });
+          setSummaryLoading(false);
         });
     } catch (error) {
       handleError(error);
@@ -111,7 +113,6 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    setIsLoading({ entry: true, summary: true });
     fetchEntries();
     fetchSummary();
   }, []);
@@ -123,7 +124,8 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
         addEntry,
         deleteEntry,
         updateEntry,
-        isLoading,
+        summaryLoading,
+        entryLoading,
         summary,
       }}
     >

@@ -24,12 +24,12 @@ type SummaryData = {
 };
 
 const Summary = () => {
-  const { summary, isLoading } = useEntry();
+  const { summary, summaryLoading } = useEntry();
   const [summaryData, setSummaryData] = useState<SummaryData>();
   const { income, expense, saving } = summary;
 
   useEffect(() => {
-    if (summary && !isLoading.summary) {
+    if (summary) {
       const data = {
         income: {
           total: formatCurrency(income.total.toString()),
@@ -67,9 +67,9 @@ const Summary = () => {
       };
       setSummaryData(data);
     }
-  }, [summary, isLoading]);
+  }, [summary]);
 
-  return summaryData && !isLoading.summary ? (
+  return summaryData && !summaryLoading ? (
     <section className="w-full grid gap-4 grid-cols-1 md:grid-cols-3">
       <div className="space-y-1 p-4 grid-cols-1 border rounded-md">
         <h1 className="text-sm font-semibold">Income (MTD)</h1>

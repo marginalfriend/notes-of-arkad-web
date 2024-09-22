@@ -6,9 +6,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useEntry } from "@/hooks/use-entry";
 
 export const EntryTable = () => {
-  const { entries, isLoading } = useEntry();
+  const { entries, entryLoading } = useEntry();
 
-  return !entries[0] && isLoading.entry ? (
+  return !entries[0] && entryLoading ? (
     <TableSkeleton />
   ) : (
     <DataTable columns={columns} data={entries} />
