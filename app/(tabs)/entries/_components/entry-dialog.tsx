@@ -3,17 +3,14 @@
 import { z } from "zod";
 import { cn, formatCurrency, parseCurrency } from "@/lib/utils";
 import { format } from "date-fns";
-import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import React, { ReactNode, useEffect, useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthFetch } from "@/hooks/use-auth-fetch";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-
 import {
   Dialog,
   DialogTitle,
@@ -21,7 +18,6 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import {
   Form,
   FormItem,
@@ -31,7 +27,6 @@ import {
   FormControl,
   FormDescription,
 } from "@/components/ui/form";
-
 import {
   Select,
   SelectItem,
@@ -39,7 +34,6 @@ import {
   SelectTrigger,
   SelectContent,
 } from "@/components/ui/select";
-
 import {
   Command,
   CommandEmpty,
@@ -48,7 +42,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-
 import {
   Popover,
   PopoverTrigger,
@@ -56,6 +49,8 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { useEntry } from "@/hooks/use-entry";
 
 const newEntrySchema = z.object({
   date: z.coerce.date(),
@@ -91,6 +86,7 @@ const EntryDialog = ({
   const [input, setInput] = useState("");
   const authFetch = useAuthFetch();
   const { toast } = useToast();
+  const { addEntry, updateEntry } = useEntry();
 
   const form = useForm<z.infer<typeof newEntrySchema>>({
     resolver: zodResolver(newEntrySchema),
@@ -104,11 +100,11 @@ const EntryDialog = ({
 
   const incomeExpense = form.getValues().incomeExpense;
 
-  const handleIncomeExpenseChange = (e: string) => {
+  const handleIncomeExpenseChange = async (e: string) => {
     setCategoriesLoading(true);
-    authFetch(`/api/category?incomeExpense=${e}`)
-      .then((res) => res.json())
-      .then((data) => setCategories(data[`${e}Category`]));
+    const res = await authFetch(`/api/category?incomeExpense=${e}`);
+    const data = await res.json();
+    setCategories(data[`${e}Category`]);
     form.setValue("categoryId", "");
     setCategoriesLoading(false);
   };
@@ -154,8 +150,16 @@ const EntryDialog = ({
         throw new Error(error);
       }
 
-      form.reset();
+      res.json().then((data) => {
+        if (entry) {
+          updateEntry(data.entry);
+        } else {
+          addEntry(data.entry);
+        }
+      });
+
       setDialog(false);
+      form.reset();
     } catch (error) {
       toast({
         title: "Error creating entry",
@@ -169,15 +173,17 @@ const EntryDialog = ({
 
   useEffect(() => {
     if (dialog && entry) {
-      form.control._disableForm(true);
-      handleIncomeExpenseChange(entry.incomeExpense);
-      for (const value in form.getValues()) {
-        form.setValue(value as EntrySchemaKey, entry[value as EntrySchemaKey]);
-      }
-      form.control._disableForm(false);
+      handleIncomeExpenseChange(entry.incomeExpense).then(() => {
+        for (const value in form.getValues()) {
+          form.setValue(
+            value as EntrySchemaKey,
+            entry[value as EntrySchemaKey]
+          );
+        }
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entry, form, dialog]);
+  }, [entry, dialog]);
 
   return (
     <Dialog open={dialog} onOpenChange={setDialog}>
@@ -203,12 +209,14 @@ const EntryDialog = ({
                     <FormControl>
                       <Select
                         onValueChange={(e) => {
-                          field.onChange(e);
-                          handleIncomeExpenseChange(e);
+                          if (!!e) {
+                            field.onChange(e);
+                            handleIncomeExpenseChange(e);
+                          }
                         }}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger disabled={!!entry}>
                           <SelectValue placeholder="Income / Expense" />
                         </SelectTrigger>
                         <SelectContent>
