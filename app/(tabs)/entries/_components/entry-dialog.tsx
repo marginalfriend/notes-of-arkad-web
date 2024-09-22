@@ -3,17 +3,14 @@
 import { z } from "zod";
 import { cn, formatCurrency, parseCurrency } from "@/lib/utils";
 import { format } from "date-fns";
-import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import React, { ReactNode, useEffect, useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthFetch } from "@/hooks/use-auth-fetch";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-
 import {
   Dialog,
   DialogTitle,
@@ -21,7 +18,6 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import {
   Form,
   FormItem,
@@ -31,7 +27,6 @@ import {
   FormControl,
   FormDescription,
 } from "@/components/ui/form";
-
 import {
   Select,
   SelectItem,
@@ -39,7 +34,6 @@ import {
   SelectTrigger,
   SelectContent,
 } from "@/components/ui/select";
-
 import {
   Command,
   CommandEmpty,
@@ -48,7 +42,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-
 import {
   Popover,
   PopoverTrigger,
@@ -56,6 +49,8 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { useEntry } from "@/hooks/use-entry";
 
 const newEntrySchema = z.object({
   date: z.coerce.date(),
@@ -91,6 +86,7 @@ const EntryDialog = ({
   const [input, setInput] = useState("");
   const authFetch = useAuthFetch();
   const { toast } = useToast();
+  const { addEntry, updateEntry } = useEntry();
 
   const form = useForm<z.infer<typeof newEntrySchema>>({
     resolver: zodResolver(newEntrySchema),
@@ -153,6 +149,14 @@ const EntryDialog = ({
         const { error } = await res.json();
         throw new Error(error);
       }
+
+      res.json().then((data) => {
+        if (entry) {
+          updateEntry(data);
+        } else {
+          addEntry(data);
+        }
+      });
 
       form.reset();
       setDialog(false);

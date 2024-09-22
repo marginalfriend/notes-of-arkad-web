@@ -36,10 +36,29 @@ export const POST = async (request: NextRequest) => {
 				amount: validatedData.amount,
 				date: validatedData.date,
 				description: validatedData.description,
+			},
+			include: {
+				category: {
+					select: {
+						id: true,
+						title: true
+					}
+				}
 			}
 		});
 
-		const response = NextResponse.json({ data, revalidated: true }, { status: 201 })
+		const { id, date, amount, category, description } = data
+
+		const entry = {
+			id,
+			date,
+			amount,
+			category,
+			description,
+			incomeExpense: "income",
+		}
+
+		const response = NextResponse.json({ entry }, { status: 201 })
 
 		revalidateTag("entries")
 
@@ -72,10 +91,29 @@ export const PUT = async (request: NextRequest) => {
 				amount: validatedData.amount,
 				date: validatedData.date,
 				description: validatedData.description,
+			},
+			include: {
+				category: {
+					select: {
+						id: true,
+						title: true
+					}
+				}
 			}
 		});
 
-		const response = NextResponse.json({ data }, { status: 200 })
+		const { id, date, amount, category, description } = data
+
+		const entry = {
+			id,
+			date,
+			amount,
+			category,
+			description,
+			incomeExpense: "income",
+		}
+
+		const response = NextResponse.json({ entry }, { status: 200 })
 
 		revalidateTag("entries")
 

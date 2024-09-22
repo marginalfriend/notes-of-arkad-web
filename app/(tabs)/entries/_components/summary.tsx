@@ -1,14 +1,14 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { HOST } from "@/constants/routes";
 import { serverAuthFetch } from "@/lib/server-auth-fetch";
-import { formatCurrency, parseCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import { cookies } from "next/headers";
 import React from "react";
 
 const Summary = async () => {
   const cookiesStore = cookies().getAll();
   const res = await serverAuthFetch(`${HOST}/api/summary`, cookiesStore, {
-    next: { tags: ["summary"] },
+    next: { tags: ["summary", "entries"] },
   });
   const result = await res?.json();
   const { data } = result;

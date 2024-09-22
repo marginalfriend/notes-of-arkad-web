@@ -5,6 +5,7 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthFetch } from "@/hooks/use-auth-fetch";
 import { useToast } from "@/hooks/use-toast";
+import { useEntry } from "@/hooks/use-entry";
 
 const DeleteButton = ({
   id,
@@ -15,8 +16,9 @@ const DeleteButton = ({
 }) => {
   const authFetch = useAuthFetch();
   const { toast } = useToast();
+  const { deleteEntry } = useEntry();
 
-  const deleteEntry = () => {
+  const eraseEntry = () => {
     authFetch(`/api/${incomeExpense}`, {
       method: "DELETE",
       body: JSON.stringify({ id }),
@@ -29,6 +31,7 @@ const DeleteButton = ({
           variant: "destructive",
         });
       } else {
+        deleteEntry(id);
         toast({
           title: "Entry deleted successfully",
           description: "Your entry has been deleted.",
@@ -38,7 +41,7 @@ const DeleteButton = ({
   };
 
   return (
-    <Button className="w-9 p-2" variant={"destructive"} onClick={deleteEntry}>
+    <Button className="w-9 p-2" variant={"destructive"} onClick={eraseEntry}>
       <Trash2 className="w-4 h-4" />
     </Button>
   );
