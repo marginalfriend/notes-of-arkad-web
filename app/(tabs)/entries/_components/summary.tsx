@@ -67,7 +67,7 @@ const Summary = () => {
       };
       setSummaryData(data);
     }
-  }, [summary]);
+  }, [summary, isLoading]);
 
   return summaryData && !isLoading.summary ? (
     <section className="w-full grid gap-4 grid-cols-1 md:grid-cols-3">
