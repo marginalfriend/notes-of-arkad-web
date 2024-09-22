@@ -8,7 +8,7 @@ import { useEntry } from "@/hooks/use-entry";
 export const EntryTable = () => {
   const { entries, isLoading } = useEntry();
 
-  return !entries[0] && isLoading ? (
+  return !entries[0] && isLoading.entry ? (
     <TableSkeleton />
   ) : (
     <DataTable columns={columns} data={entries} />

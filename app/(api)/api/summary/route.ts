@@ -104,19 +104,19 @@ export const GET = async () => {
 		const data = {
 			income: {
 				total: currentIncomeValue,
-				percentage: incomePercentage
+				percentage: lastMonthIncome && incomePercentage
 			},
 			expense: {
 				total: currentExpenseValue,
-				percentage: expensePercentage
+				percentage: lastMonthExpense && expensePercentage
 			},
 			saving: {
 				total: currentSaving,
-				percentage: savingPercentage,
+				percentage: lastMonthSaving && savingPercentage,
 			}
 		}
 
-		const response = NextResponse.json({ data, revalidated: true }, { status: 200 })
+		const response = NextResponse.json({ data }, { status: 200 })
 
 		revalidateTag("summary")
 
