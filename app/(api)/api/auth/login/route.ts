@@ -16,12 +16,11 @@ export async function POST(request: Request) {
 
 	const { accessToken, refreshToken } = await generateTokens({
 		id: user.id,
-		username: user.username,
 	});
 
 	const response = NextResponse.json({
 		accessToken,
-		user: { id: user.id, username: user.username },
+		user: { id: user.id },
 	});
 
 	response.cookies.set("refreshToken", refreshToken, {

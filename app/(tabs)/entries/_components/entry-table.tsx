@@ -12,6 +12,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -55,51 +56,51 @@ const SelectMonth = () => {
   const { entryMonth, setEntryMonth } = useEntry();
   const months = [
     {
-      value: 1,
+      value: 0,
       label: "January",
     },
     {
-      value: 2,
+      value: 1,
       label: "February",
     },
     {
-      value: 3,
+      value: 2,
       label: "March",
     },
     {
-      value: 4,
+      value: 3,
       label: "April",
     },
     {
-      value: 5,
+      value: 4,
       label: "May",
     },
     {
-      value: 6,
+      value: 5,
       label: "June",
     },
     {
-      value: 7,
+      value: 6,
       label: "July",
     },
     {
-      value: 8,
+      value: 7,
       label: "August",
     },
     {
-      value: 9,
+      value: 8,
       label: "September",
     },
     {
-      value: 10,
+      value: 9,
       label: "October",
     },
     {
-      value: 11,
+      value: 10,
       label: "November",
     },
     {
-      value: 12,
+      value: 11,
       label: "December",
     },
   ];
