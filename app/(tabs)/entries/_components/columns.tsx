@@ -42,26 +42,6 @@ export const columns: ColumnDef<Entry>[] = [
       }),
   },
   {
-    accessorKey: "month",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="w-full"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Month
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return new Intl.DateTimeFormat("en-US", { month: "long" }).format(
-        new Date(row.original.date)
-      );
-    },
-  },
-  {
     accessorKey: "amount",
     header: ({ column }) => {
       return (

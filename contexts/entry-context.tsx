@@ -92,7 +92,7 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
       let url = "/api/entry";
 
       if (entryMonth) {
-        url = url.concat("?month=", (entryMonth - 1).toString());
+        url = url.concat("?month=", entryMonth.toString());
       }
 
       authFetch(url, {
@@ -124,7 +124,6 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     fetchEntries();
     fetchSummary();
-    console.log(entryMonth);
   }, [entryMonth]);
 
   return (
