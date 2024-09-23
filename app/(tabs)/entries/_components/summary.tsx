@@ -3,6 +3,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEntry } from "@/hooks/use-entry";
 import { formatCurrency } from "@/lib/utils";
+import { ArrowDownToLine, ArrowUpFromLine, RotateCcw } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 type SummaryData = {
@@ -72,7 +73,12 @@ const Summary = () => {
   return summaryData && !summaryLoading ? (
     <section className="w-full grid gap-4 grid-cols-1 md:grid-cols-3">
       <div className="space-y-1 p-4 grid-cols-1 border rounded-md">
-        <h1 className="text-sm font-semibold">Income (MTD)</h1>
+        <h1 className="text-sm font-semibold flex justify-between">
+          Income (MTD)
+          <span>
+            <ArrowDownToLine className="w-5 h-5 text-green-500" />
+          </span>
+        </h1>
         <p className="text-2xl font-extrabold">{summaryData.income.total}</p>
         {income.percentage && (
           <p
@@ -89,7 +95,12 @@ const Summary = () => {
         )}
       </div>
       <div className="space-y-1 p-4 grid-cols-1 border rounded-md">
-        <h1 className="text-sm font-semibold">Expense (MTD)</h1>
+        <h1 className="text-sm font-semibold flex justify-between">
+          Expense (MTD)
+          <span>
+            <ArrowUpFromLine className="w-5 h-5 text-red-500" />
+          </span>
+        </h1>
         <p className="text-2xl font-extrabold">{summaryData.expense.total}</p>
         {expense.percentage && (
           <p
@@ -106,7 +117,12 @@ const Summary = () => {
         )}
       </div>
       <div className="space-y-1 p-4 grid-cols-1 border rounded-md">
-        <h1 className="text-sm font-semibold">Saving (MTD)</h1>
+        <h1 className="text-sm font-semibold flex justify-between">
+          Saving (MTD)
+          <span>
+            <RotateCcw className="w-5 h-5 text-yellow-500" />
+          </span>
+        </h1>
         <p className="text-2xl font-extrabold">{summaryData.saving.total}</p>
         {saving.percentage && (
           <p
