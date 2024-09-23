@@ -112,7 +112,7 @@ export const GET = async () => {
 			},
 			saving: {
 				total: currentSaving,
-				percentage: lastMonthSaving && savingPercentage,
+				percentage: lastMonthSaving > 0 && savingPercentage,
 			}
 		}
 

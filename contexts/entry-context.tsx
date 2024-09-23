@@ -3,7 +3,7 @@
 import { Entry } from "@/app/(tabs)/entries/_components/columns";
 import { useAuthFetch } from "@/hooks/use-auth-fetch";
 import { useToast } from "@/hooks/use-toast";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 type SummaryData = {
   income: {
@@ -43,6 +43,8 @@ export type EntryContextProps = {
   deleteEntry: (id: string) => void;
   summaryLoading: boolean;
   entryLoading: boolean;
+  setEntryMonth: (month: number) => void;
+  entryMonth: number;
 };
 
 export const EntryContext = createContext<EntryContextProps | undefined>(
@@ -54,6 +56,7 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
   const [summary, setSummary] = useState<SummaryData>(defaultSummaryData);
   const [entryLoading, setEntryLoading] = useState(true);
   const [summaryLoading, setSummaryLoading] = useState(true);
+  const [entryMonth, setEntryMonth] = useState(new Date().getMonth());
   const authFetch = useAuthFetch();
   const { toast } = useToast();
 
@@ -86,7 +89,13 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchEntries = () => {
     try {
-      authFetch(`/api/entry`, {
+      let url = "/api/entry";
+
+      if (entryMonth) {
+        url = url.concat("?month=", (entryMonth - 1).toString());
+      }
+
+      authFetch(url, {
         next: { tags: ["entries"] },
       })
         .then((res) => res.json())
@@ -115,15 +124,18 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     fetchEntries();
     fetchSummary();
-  }, []);
+    console.log(entryMonth);
+  }, [entryMonth]);
 
   return (
     <EntryContext.Provider
       value={{
+        entryMonth,
         entries,
         addEntry,
         deleteEntry,
         updateEntry,
+        setEntryMonth,
         summaryLoading,
         entryLoading,
         summary,

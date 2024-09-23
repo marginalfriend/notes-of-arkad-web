@@ -24,15 +24,18 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useEffect } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filterValue?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterValue,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -54,20 +57,12 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  useEffect(() => {
+    table.getColumn("description")?.setFilterValue(filterValue);
+  }, [table, filterValue]);
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Input
-          placeholder="Filter description..."
-          value={
-            (table.getColumn("description")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("description")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

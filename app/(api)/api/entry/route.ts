@@ -1,11 +1,10 @@
 import 'server-only'
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAccount, handleError, toEntry } from "../utils";
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
 	try {
 		const token = headers().get("Authorization");
 		const account = await getAccount(token);
@@ -15,10 +14,24 @@ export const GET = async () => {
 			return NextResponse.json({ error: "Account not found" }, { status: 401 });
 		}
 
+		const reqParam = request.nextUrl.searchParams.get("month")
+
+		const currentDate = new Date()
+		const month = reqParam ? parseInt(reqParam) : currentDate.getMonth()
+
+		const firstDay = new Date(currentDate.getFullYear(), month)
+		const lastDay = new Date(currentDate.getFullYear(), month + 1, 0)
+
 		const income = await prisma.income.findMany({
 			where: {
-				category: {
-					accountId: account.id
+				AND: {
+					category: {
+						accountId: account.id
+					},
+					date: {
+						gte: firstDay,
+						lte: lastDay
+					}
 				}
 			},
 			include: {
@@ -33,8 +46,14 @@ export const GET = async () => {
 
 		const expense = await prisma.expense.findMany({
 			where: {
-				category: {
-					accountId: account.id
+				AND: {
+					category: {
+						accountId: account.id
+					},
+					date: {
+						gte: firstDay,
+						lte: lastDay
+					}
 				}
 			},
 			include: {
