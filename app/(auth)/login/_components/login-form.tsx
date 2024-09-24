@@ -82,7 +82,7 @@ const LoginForm = () => {
     }
   };
   return (
-    <Card className="w-96 bg-white/80 bg-blend-color-burn backdrop-filter backdrop-blur">
+    <Card className="flex flex-col md:w-96 mx-2 bg-white/80 bg-blend-color-burn backdrop-filter backdrop-blur">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
         <CardDescription className="text-sm text-gray-500 text-center">
