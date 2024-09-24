@@ -51,7 +51,7 @@ export const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 h-12 border-b w-screen flex items-center justify-between bg-background px-4 transition-transform duration-300 ${
+      className={`fixed top-0 z-50 h-12 border-b w-screen flex items-center justify-between bg-background px-4 transition-transform duration-300 ${
         hidden ? "-translate-y-12" : "translate-y-0"
       }`}
     >

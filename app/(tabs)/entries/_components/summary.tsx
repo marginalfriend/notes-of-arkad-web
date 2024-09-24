@@ -31,6 +31,7 @@ const Summary = () => {
 
   useEffect(() => {
     if (summary) {
+      console.log(summary);
       const data = {
         income: {
           total: formatCurrency(income.total.toString()),
@@ -67,6 +68,8 @@ const Summary = () => {
         },
       };
       setSummaryData(data);
+
+      console.log(data);
     }
   }, [summary]);
 
@@ -132,7 +135,7 @@ const Summary = () => {
                 : "text-red-500"
             }`}
           >
-            {saving.percentage > 0
+            {saving.percentage !== 0
               ? "+" + summaryData.saving.percentage
               : summaryData.saving.percentage}
           </p>

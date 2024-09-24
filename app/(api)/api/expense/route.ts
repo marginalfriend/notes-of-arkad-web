@@ -55,7 +55,7 @@ export const POST = async (request: NextRequest) => {
 			amount,
 			category,
 			description,
-			incomeExpense: "income",
+			incomeExpense: "expense",
 		}
 
 		const response = NextResponse.json({ entry }, { status: 201 })
@@ -110,7 +110,7 @@ export const PUT = async (request: NextRequest) => {
 			amount,
 			category,
 			description,
-			incomeExpense: "income",
+			incomeExpense: "expense",
 		}
 
 		const response = NextResponse.json({ entry }, { status: 200 })

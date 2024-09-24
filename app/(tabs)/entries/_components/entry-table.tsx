@@ -107,7 +107,7 @@ export const EntryTable = () => {
           />
         </div>
       </TabsContent>
-      <TabsContent value="chart" className="space-y-4">
+      <TabsContent value="chart" className="space-y-4 pb-8">
         <div className="flex items-center justify-between gap-4">
           <div />
           <SelectMonth />

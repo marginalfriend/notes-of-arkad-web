@@ -70,6 +70,7 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const addEntry = (entry: Entry) => {
+    console.log("New Entry: ", entry);
     setEntries([entry, ...entries]);
     fetchSummary();
   };
