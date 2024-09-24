@@ -1,154 +1,362 @@
-export const entries = [
+export const data = [
 	{
-		id: "entry_8709",
-		date: new Date("2023-11-19"),
-		amount: 3017.81,
-		category: "Entertainment",
-		incomeExpense: "income",
-		description: "Payment received",
+		"id": "4048",
+		"date": null,
+		"amount": 465.96,
+		"category": { "id": "5", "title": "Utilities" },
+		"incomeExpense": "expense",
+		"description": "Bus fare"
 	},
 	{
-		id: "entry_6140",
-		date: new Date("2024-08-21"),
-		amount: 4932.1,
-		category: "Entertainment",
-		incomeExpense: "expense",
-		description: "Purchase made",
+		"id": "5209",
+		"date": null,
+		"amount": 415.63,
+		"category": { "id": "2", "title": "Transport" },
+		"incomeExpense": "income",
+		"description": null
 	},
 	{
-		id: "entry_6773",
-		date: new Date("2024-01-25"),
-		amount: 4187.22,
-		category: "Investment",
-		incomeExpense: "income",
-		description: "Miscellaneous expense",
+		"id": "8943",
+		"date": null,
+		"amount": 331.43,
+		"category": { "id": "3", "title": "Entertainment" },
+		"incomeExpense": "expense",
+		"description": "Gym membership"
 	},
 	{
-		id: "entry_5398",
-		date: new Date("2023-11-05"),
-		amount: 1405.95,
-		category: "Investment",
-		incomeExpense: "expense",
-		description: "Miscellaneous expense",
+		"id": "9477",
+		"date": null,
+		"amount": 463.65,
+		"category": { "id": "5", "title": "Utilities" },
+		"incomeExpense": "income",
+		"description": "Gym membership"
 	},
 	{
-		id: "entry_3208",
-		date: new Date("2024-01-16"),
-		amount: 24.14,
-		category: "Health",
-		incomeExpense: "expense",
-		description: undefined,
+		"id": "2914",
+		"date": null,
+		"amount": 217.56,
+		"category": { "id": "4", "title": "Health" },
+		"incomeExpense": "income",
+		"description": "Gym membership"
 	},
 	{
-		id: "entry_7962",
-		date: new Date("2024-06-18"),
-		amount: 3048.23,
-		category: "Entertainment",
-		incomeExpense: "income",
-		description: "Payment received",
+		"id": "4971",
+		"date": null,
+		"amount": 214.23,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "income",
+		"description": null
 	},
 	{
-		id: "entry_3130",
-		date: new Date("2023-12-14"),
-		amount: 1049.99,
-		category: "Entertainment",
-		incomeExpense: "income",
-		description: undefined,
+		"id": "7784",
+		"date": null,
+		"amount": 427.00,
+		"category": { "id": "5", "title": "Utilities" },
+		"incomeExpense": "expense",
+		"description": "Bus fare"
 	},
 	{
-		id: "entry_9336",
-		date: new Date("2024-08-14"),
-		amount: 3643.09,
-		category: "Health",
-		incomeExpense: "income",
-		description: undefined,
+		"id": "7203",
+		"date": null,
+		"amount": 157.73,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "expense",
+		"description": "Movie night"
 	},
 	{
-		id: "entry_1625",
-		date: new Date("2024-04-30"),
-		amount: 2106.11,
-		category: "Investment",
-		incomeExpense: "income",
-		description: "Payment received",
+		"id": "4158",
+		"date": null,
+		"amount": 187.30,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "expense",
+		"description": "Lunch with friends"
 	},
 	{
-		id: "entry_8806",
-		date: new Date("2024-03-01"),
-		amount: 2782.62,
-		category: "Bills",
-		incomeExpense: "expense",
-		description: "Purchase made",
+		"id": "6563",
+		"date": null,
+		"amount": 54.97,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "expense",
+		"description": "Lunch with friends"
 	},
 	{
-		id: "entry_1671",
-		date: new Date("2024-05-25"),
-		amount: 2535.87,
-		category: "Entertainment",
-		incomeExpense: "income",
-		description: "Miscellaneous expense",
+		"id": "5862",
+		"date": null,
+		"amount": 262.41,
+		"category": { "id": "4", "title": "Health" },
+		"incomeExpense": "income",
+		"description": "Grocery shopping"
 	},
 	{
-		id: "entry_2416",
-		date: new Date("2024-05-02"),
-		amount: 47.84,
-		category: "Food",
-		incomeExpense: "income",
-		description: undefined,
+		"id": "4126",
+		"date": null,
+		"amount": 209.75,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "income",
+		"description": null
 	},
 	{
-		id: "entry_7330",
-		date: new Date("2024-06-15"),
-		amount: 3866.39,
-		category: "Groceries",
-		incomeExpense: "expense",
-		description: "Payment received",
+		"id": "3718",
+		"date": null,
+		"amount": 365.41,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "income",
+		"description": "Movie night"
 	},
 	{
-		id: "entry_4973",
-		date: new Date("2024-02-23"),
-		amount: 4698.98,
-		category: "Transport",
-		incomeExpense: "expense",
-		description: "Payment received",
+		"id": "6157",
+		"date": null,
+		"amount": 434.39,
+		"category": { "id": "2", "title": "Transport" },
+		"incomeExpense": "expense",
+		"description": "Bus fare"
 	},
 	{
-		id: "entry_4725",
-		date: new Date("2023-12-30"),
-		amount: 3092.83,
-		category: "Salary",
-		incomeExpense: "expense",
-		description: "Payment received",
+		"id": "9386",
+		"date": null,
+		"amount": 22.92,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "expense",
+		"description": "Grocery shopping"
 	},
 	{
-		id: "entry_6798",
-		date: new Date("2024-03-11"),
-		amount: 4581.82,
-		category: "Groceries",
-		incomeExpense: "expense",
-		description: "Miscellaneous expense",
+		"id": "4048",
+		"date": null,
+		"amount": 465.96,
+		"category": { "id": "5", "title": "Utilities" },
+		"incomeExpense": "expense",
+		"description": "Bus fare"
 	},
 	{
-		id: "entry_9492",
-		date: new Date("2023-10-03"),
-		amount: 3207.04,
-		category: "Salary",
-		incomeExpense: "income",
-		description: undefined,
+		"id": "5209",
+		"date": null,
+		"amount": 415.63,
+		"category": { "id": "2", "title": "Transport" },
+		"incomeExpense": "income",
+		"description": null
 	},
 	{
-		id: "entry_7607",
-		date: new Date("2023-11-23"),
-		amount: 4218.95,
-		category: "Groceries",
-		incomeExpense: "expense",
-		description: "Payment received",
+		"id": "8943",
+		"date": null,
+		"amount": 331.43,
+		"category": { "id": "3", "title": "Entertainment" },
+		"incomeExpense": "expense",
+		"description": "Gym membership"
 	},
 	{
-		id: "entry_8390",
-		date: new Date("2024-06-15"),
-		amount: 1625.85,
-		category: "Salary",
-		incomeExpense: "expense",
-		description: undefined,
+		"id": "9477",
+		"date": null,
+		"amount": 463.65,
+		"category": { "id": "5", "title": "Utilities" },
+		"incomeExpense": "income",
+		"description": "Gym membership"
 	},
-];
+	{
+		"id": "2914",
+		"date": null,
+		"amount": 217.56,
+		"category": { "id": "4", "title": "Health" },
+		"incomeExpense": "income",
+		"description": "Gym membership"
+	},
+	{
+		"id": "4971",
+		"date": null,
+		"amount": 214.23,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "income",
+		"description": null
+	},
+	{
+		"id": "7784",
+		"date": null,
+		"amount": 427.00,
+		"category": { "id": "5", "title": "Utilities" },
+		"incomeExpense": "expense",
+		"description": "Bus fare"
+	},
+	{
+		"id": "7203",
+		"date": null,
+		"amount": 157.73,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "expense",
+		"description": "Movie night"
+	},
+	{
+		"id": "4158",
+		"date": null,
+		"amount": 187.30,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "expense",
+		"description": "Lunch with friends"
+	},
+	{
+		"id": "6563",
+		"date": null,
+		"amount": 54.97,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "expense",
+		"description": "Lunch with friends"
+	},
+	{
+		"id": "5862",
+		"date": null,
+		"amount": 262.41,
+		"category": { "id": "4", "title": "Health" },
+		"incomeExpense": "income",
+		"description": "Grocery shopping"
+	},
+	{
+		"id": "4126",
+		"date": null,
+		"amount": 209.75,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "income",
+		"description": null
+	},
+	{
+		"id": "3718",
+		"date": null,
+		"amount": 365.41,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "income",
+		"description": "Movie night"
+	},
+	{
+		"id": "6157",
+		"date": null,
+		"amount": 434.39,
+		"category": { "id": "2", "title": "Transport" },
+		"incomeExpense": "expense",
+		"description": "Bus fare"
+	},
+	{
+		"id": "9386",
+		"date": null,
+		"amount": 22.92,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "expense",
+		"description": "Grocery shopping"
+	},
+	{
+		"id": "9912",
+		"date": null,
+		"amount": 52.33,
+		"category": { "id": "4", "title": "Health" },
+		"incomeExpense": "income",
+		"description": "Lunch with friends"
+	},
+	{
+		"id": "8420",
+		"date": null,
+		"amount": 263.65,
+		"category": { "id": "3", "title": "Entertainment" },
+		"incomeExpense": "expense",
+		"description": "Bus fare"
+	},
+	{
+		"id": "1423",
+		"date": null,
+		"amount": 142.79,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "expense",
+		"description": "Lunch with friends"
+	},
+	{
+		"id": "8790",
+		"date": null,
+		"amount": 152.56,
+		"category": { "id": "3", "title": "Entertainment" },
+		"incomeExpense": "expense",
+		"description": "Movie night"
+	},
+	{
+		"id": "1234",
+		"date": null,
+		"amount": 352.49,
+		"category": { "id": "1", "title": "Food" },
+		"incomeExpense": "income",
+		"description": "Grocery shopping"
+	},
+	{
+		"id": "6738",
+		"date": null,
+		"amount": 53.24,
+		"category": { "id": "2", "title": "Transport" },
+		"incomeExpense": "expense",
+		"description": "Lunch with friends"
+	},
+	{
+		"id": "4429",
+		"date": null,
+		"amount": 48.96,
+		"category": { "id": "2", "title": "Transport" },
+		"incomeExpense": "expense",
+		"description": "Grocery shopping"
+	},
+	{
+		"id": "2753",
+		"date": null,
+		"amount": 85.61,
+		"category": { "id": "4", "title": "Health" },
+		"incomeExpense": "income",
+		"description": "Movie night"
+	},
+	{
+		"id": "7811",
+		"date": null,
+		"amount": 49.42,
+		"category": { "id": "2", "title": "Transport" },
+		"incomeExpense": "expense",
+		"description": "Movie night"
+	},
+	{
+		"id": "3320",
+		"date": null,
+		"amount": 63.88,
+		"category": { "id": "2", "title": "Transport" },
+		"incomeExpense": "expense",
+		"description": null
+	},
+	{
+		"id": "3660",
+		"date": null,
+		"amount": 498.03,
+		"category": { "id": "5", "title": "Utilities" },
+		"incomeExpense": "expense",
+		"description": null
+	},
+	{
+		"id": "1503",
+		"date": null,
+		"amount": 425.59,
+		"category": { "id": "3", "title": "Entertainment" },
+		"incomeExpense": "income",
+		"description": null
+	},
+	{
+		"id": "5928",
+		"date": null,
+		"amount": 287.39,
+		"category": { "id": "3", "title": "Entertainment" },
+		"incomeExpense": "expense",
+		"description": null
+	},
+	{
+		"id": "5169",
+		"date": null,
+		"amount": 155.03,
+		"category": { "id": "4", "title": "Health" },
+		"incomeExpense": "income",
+		"description": "Grocery shopping"
+	},
+	{
+		"id": "3936",
+		"date": null,
+		"amount": 481.61,
+		"category": { "id": "5", "title": "Utilities" },
+		"incomeExpense": "income",
+		"description": "Grocery shopping"
+	}
+]

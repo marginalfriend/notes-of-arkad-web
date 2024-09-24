@@ -160,6 +160,10 @@ const EntryDialog = ({
 
       setDialog(false);
       form.reset();
+      toast({
+        title: "Entry creation success",
+        description: "You have successfully created an entry",
+      });
     } catch (error) {
       toast({
         title: "Error creating entry",
