@@ -44,6 +44,7 @@ export const GET = async (request: NextRequest) => {
 				}
 			}
 		});
+		console.log("[ENTRY ENDPOINT] Income: ", income)
 
 		const expense = await prisma.expense.findMany({
 			where: {
@@ -66,6 +67,7 @@ export const GET = async (request: NextRequest) => {
 				}
 			}
 		});
+		console.log("[ENTRY ENDPOINT] Expense: ", expense)
 
 		const entries = toEntry(income, expense)
 
