@@ -22,6 +22,9 @@ export const GET = async (request: NextRequest) => {
 
 		const firstDay = new Date(currentDate.getFullYear(), month)
 		const lastDay = new Date(currentDate.getFullYear(), month + 1, 0)
+		console.log("[ENTRY ENDPOINT] First day: ", firstDay)
+		console.log("[ENTRY ENDPOINT] Last day: ", lastDay)
+
 
 		const income = await prisma.income.findMany({
 			where: {
