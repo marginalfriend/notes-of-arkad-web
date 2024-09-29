@@ -15,6 +15,7 @@ export const GET = async (request: NextRequest) => {
 		}
 
 		const reqParam = request.nextUrl.searchParams.get("month")
+		console.log("[ENTRY ENDPOINT] Month: ", reqParam)
 
 		const currentDate = new Date()
 		const month = reqParam ? parseInt(reqParam) : currentDate.getMonth()
